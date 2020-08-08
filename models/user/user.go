@@ -13,7 +13,9 @@ type User struct {
 	Gender     int       `orm:"null;description(性别)"`
 	Phone      int64     `orm:"null;description(手机号)"`
 	Addr       string    `orm:"null;size(255);description(地址)"`
-	CreateTime time.Time `orm:"auto_now;type(datetime);description(创建时间)"`
+	IsActive   int       `orm:"default(1);description(1启用/0停用)"`
+	IsDelete   int       `orm:"default(0);description(1删除/0未删除)"`
+	CreateTime time.Time `orm:"auto_now;type(datetime);description(创建时间);null"`
 }
 
 func (u *User) TableName() string {

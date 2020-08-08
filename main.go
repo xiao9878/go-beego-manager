@@ -6,6 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	_ "manager/models/user"
 	_ "manager/routers"
+	"manager/utils"
 )
 
 func init() {
@@ -18,6 +19,10 @@ func init() {
 	orm.RegisterDataBase("default", "mysql", username+":"+pwd+"@tcp("+host+":"+port+")/"+db+"?charset=utf8")
 }
 func main() {
-	//orm.RunCommand()
+	orm.RunCommand()
+
+	//未登录的请求
+	beego.InsertFilter("/main/*", beego.BeforeRouter, utils.LoginFilter)
+
 	beego.Run()
 }

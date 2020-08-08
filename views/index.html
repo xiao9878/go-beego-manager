@@ -52,7 +52,7 @@
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a _href="member-list.html">
+                        <a _href="{{urlfor "UserController.Get"}}">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>用户列表</cite>
                             
@@ -274,7 +274,7 @@
           </ul>
           <div class="layui-tab-content">
             <div class="layui-tab-item layui-show">
-                <iframe src='./welcome.html' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
+                <iframe src='{{urlfor "HomeController.Welcome"}}' frameborder="0" scrolling="yes" class="x-iframe"></iframe>
             </div>
           </div>
         </div>

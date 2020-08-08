@@ -49,10 +49,10 @@ func (this *LoginController) Post() {
 		this.Data["json"] = res
 	} else {
 		md5_pwd := utils.GetMd5File(password)
-		user := user.User{}
+		user_info := user.User{}
 		o := orm.NewOrm()
 		orm.Debug = true
-		is_exist := o.QueryTable(user).Filter("user_name", username).Filter("password", md5_pwd).Exist() //.One(&user)
+		is_exist := o.QueryTable(user_info).Filter("user_name", username).Filter("password", md5_pwd).Exist() //.One(&user)
 		if !is_exist {
 			res["code"] = http.StatusUnauthorized
 			res["msg"] = "用户或密码错误！"

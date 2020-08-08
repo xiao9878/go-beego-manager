@@ -12,6 +12,7 @@
 	<link rel="stylesheet" href="../static/css/xadmin.css">
     <link rel="icon" href="../static/images/zlkt.ico" type="image/x-icon"/>
     <script type="text/javascript" src="../../static/js/ztree/jquery.min.js"></script>
+    <script type="text/javascript" src="../../static/js/sweetalert2.all.js"></script>
     <script src="../static/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="../static/js/xadmin.js"></script>
 
@@ -84,7 +85,10 @@
                     },
                     success:function (data) {
                         if (data["code"]==200) {
-                            window.location.replace("http://www.baidu.com");
+                            // swal({
+                            //     text:"success",
+                            // })
+                            window.location.replace("{{urlfor "HomeController.Get"}}");
                         } else {
                             alert(data["msg"])
                             getCaptcha()
