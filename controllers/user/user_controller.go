@@ -71,7 +71,7 @@ func (this *UserController) Get() {
 		nextPage = currentPage
 	}
 
-	utils.Paginator(currentPage, prePage, count)
+	page := utils.Paginator(currentPage, prePage, count)
 
 	this.Data["users"] = users
 	this.Data["prePage"] = prePage
@@ -79,5 +79,6 @@ func (this *UserController) Get() {
 	this.Data["currentPage"] = nextPage
 	this.Data["countPage"] = countPage
 	this.Data["count"] = count
+	this.Data["page"] = page
 	this.TplName = "user/user.html"
 }
