@@ -12,7 +12,7 @@
 	<link rel="stylesheet" href="../static/css/xadmin.css">
     <link rel="icon" href="../static/images/zlkt.ico" type="image/x-icon"/>
     <script type="text/javascript" src="../../static/js/ztree/jquery.min.js"></script>
-    <script type="text/javascript" src="../../static/js/sweetalert2.all.js"></script>
+{{/*    <script type="text/javascript" src="../../static/js/sweetalert2.all.js"></script>*/}}
     <script src="../static/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="../static/js/xadmin.js"></script>
 
@@ -23,7 +23,7 @@
         <div class="message">知了课堂内部办公网-登录管理</div>
         <div id="darkbannerwrap"></div>
         
-        <form method="post" class="layui-form" >
+        <form method="post" class="layui-form" id="login">
             <input id="username" placeholder="用户名"  type="text" lay-verify="required" class="layui-input" >
             <hr class="hr15">
             <input id="password" lay-verify="required" placeholder="密码"  type="password" class="layui-input">
@@ -60,14 +60,17 @@
 
             })
         }
-
+        // $(document).ready(function(){
+        //     $(document).keyup(function(event){
+        //         if(event.keyCode == 13){
+        //             dologin();
+        //         }
+        //     })
+        // })
         $(function  () {
             layui.use('form', function(){
               var form = layui.form;
-              // layer.msg('玩命卖萌中', function(){
-              //   //关闭后的操作
-              //   });
-              //监听提交
+
               form.on('submit(login)', function(data){
                 // alert(888)
                 var username = $("#username").val();
@@ -85,12 +88,9 @@
                     },
                     success:function (data) {
                         if (data["code"]==200) {
-                            // swal({
-                            //     text:"success",
-                            // })
                             window.location.replace("{{urlfor "HomeController.Get"}}");
                         } else {
-                            alert(data["msg"])
+                            layer.alert(data["msg"])
                             getCaptcha()
                         }
                     },
