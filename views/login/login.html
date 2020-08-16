@@ -24,9 +24,9 @@
         <div id="darkbannerwrap"></div>
         
         <form method="post" class="layui-form" id="login">
-            <input id="username" placeholder="用户名"  type="text" lay-verify="required" class="layui-input" >
+            <input id="username" placeholder="用户名" value="root"  type="text" lay-verify="required" class="layui-input" >
             <hr class="hr15">
-            <input id="password" lay-verify="required" placeholder="密码"  type="password" class="layui-input">
+            <input id="password" lay-verify="required" value="123456" placeholder="密码"  type="password" class="layui-input">
             <hr class="hr15">
             <div>
                 <input id="captcha" placeholder="验证码" type="text" class="layui-input" style="width: 180px;float: left">
@@ -50,11 +50,12 @@
                 data:{},
                 type:"GET",
                 success:function (data) {
-                    if (data["Code"]!=200) {
-                        alert(data["Msg"])
+                    debugger
+                    if (data.code != 200) {
+                        alert(data.msg)
                     } else {
-                        $("#captcha_img").attr("src",data.BS64);
-                        $("#captcha_id").attr("value",data.Id);
+                        $("#captcha_img").attr("src",data.captcha.BS64);
+                        $("#captcha_id").attr("value",data.captcha.Id);
                     }
                 },
 
@@ -87,7 +88,8 @@
                         "captcha_id":captcha_id
                     },
                     success:function (data) {
-                        if (data["code"]==200) {
+                        console.log(data)
+                        if (data.code==200) {
                             window.location.replace("{{urlfor "HomeController.Get"}}");
                         } else {
                             layer.alert(data["msg"])

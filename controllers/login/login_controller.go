@@ -9,6 +9,11 @@ import (
 	"net/http"
 )
 
+const (
+	IsActiveOK = iota
+	IsActiveNO = 1
+)
+
 type LoginController struct {
 	beego.Controller
 }
@@ -26,11 +31,13 @@ func (this *LoginController) ChangCaptcha() {
 	message := map[string]interface{}{}
 	id, base64, err := utils.GetCaptcha()
 	if err != nil {
-		message["Msg"] = "生成失败！"
-		message["Code"] = http.StatusServiceUnavailable
+		message["msg"] = "生成失败！"
+		message["code"] = http.StatusServiceUnavailable
 		this.Data["json"] = message
 	} else {
-		this.Data["json"] = utils.Captcha{Id: id, BS64: base64, Code: http.StatusOK}
+		message["code"] = http.StatusOK
+		message["captcha"] = utils.Captcha{Id: id, BS64: base64}
+		this.Data["json"] = message
 	}
 	this.ServeJSON()
 }
@@ -53,16 +60,19 @@ func (this *LoginController) Post() {
 		o := orm.NewOrm()
 		orm.Debug = true
 		is_exist := o.QueryTable(user_info).Filter("user_name", username).Filter("password", md5_pwd).Exist() //.One(&user)
+		o.QueryTable(user_info).Filter("user_name", username).Filter("password", md5_pwd).One(&user_info)     //.One(&user)
 		if !is_exist {
 			res["code"] = http.StatusUnauthorized
 			res["msg"] = "用户或密码错误！"
-			this.Data["json"] = res
+		} else if user_info.IsActive == 1 {
+			res["code"] = http.StatusPaymentRequired
+			res["msg"] = "用户被禁用！"
 		} else {
 			this.SetSession("username", username)
 			res["code"] = http.StatusOK
 			res["msg"] = "登陆成功！"
-			this.Data["json"] = res
 		}
 	}
+	this.Data["json"] = res
 	this.ServeJSON()
 }

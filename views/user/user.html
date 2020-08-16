@@ -6,12 +6,13 @@
     <title>欢迎页面-X-admin2.0</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport"
-          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="../../static/css/font.css">
     <link rel="stylesheet" href="../../static/css/xadmin.css">
     <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+    <script src="/static/js/ions_alert.js"></script>
+    <script src="/static/js/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="/static/css/sweetalert.css">
     <script type="text/javascript" src="../../static/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="../../static/js/xadmin.js"></script>
     <!-- 让IE8/9支持媒体查询，从而兼容栅格 -->
@@ -44,6 +45,9 @@
     </div>
     <xblock>
         <button class="layui-btn layui-btn-danger" onclick="delAll()"><i class="layui-icon"></i>批量恢复</button>
+        <button class="layui-btn" onclick="x_admin_show('添加用户','{{urlfor "UserController.ToAdd"}}',600,500)"><i
+                    class="layui-icon"></i>添加
+        </button>
         <span class="x-right" style="line-height:40px">共有数据：{{.count}} 条</span>
     </xblock>
     <table class="layui-table">
@@ -87,19 +91,19 @@
                     {{date .CreateTime "Y-m-d H:m:s"}}
                 </td>
                 <td class="td-status">
-                    {{if eq .IsActive 1}}
+                    {{if eq .IsActive 0}}
                     <span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
-                {{else if eq .IsActive 2}}
+                {{else if eq .IsActive 1}}
                     <span class="layui-btn layui-btn-danger layui-btn-mini">已停用</span></td>
                 {{end}}
                 <td class="td-manage">
 
-                    {{if eq .IsActive 1}}
-                        <a onclick="member_stop(this,'10001')" href="javascript:;" title="停用">
+                    {{if eq .IsActive 0}}
+                        <a onclick="member_stop({{.Id}},{{.IsActive}})" href="javascript:;" title="停用">
                             <i class="layui-icon">&#xe601;</i>
                         </a>
-                    {{else if eq .IsActive 2}}
-                        <a onclick="member_stop(this,'10001')" href="javascript:;" title="停用">
+                    {{else if eq .IsActive 1}}
+                        <a onclick="member_stop({{.Id}},{{.IsActive}})" href="javascript:;" title="启用">
                             <i class="layui-icon">&#xe62f;</i>
                         </a>
                     {{end}}
@@ -107,10 +111,10 @@
                     <a title="编辑" onclick="x_admin_show('编辑','member-edit.html',600,400)" href="javascript:;">
                         <i class="layui-icon">&#xe642;</i>
                     </a>
-                    <a onclick="x_admin_show('修改密码','member-password.html',600,400)" title="修改密码" href="javascript:;">
+                    <a title="重置密码" onclick="resetpwd({{.Id}})" href="javascript:;">
                         <i class="layui-icon">&#xe631;</i>
                     </a>
-                    <a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
+                    <a title="删除" onclick="member_del({{.Id}})" href="javascript:;">
                         <i class="layui-icon">&#xe640;</i>
                     </a>
                 </td>
@@ -121,12 +125,17 @@
     <div class="page">
         <div>
             <span class="current">共{{.countPage}}页</span>
-            <a class="prev" href="{{urlfor "UserController.Get"}}?page={{.prePage}}"><&lt;</a>
-            <a class="num" href="">1</a>
-            <span class="current">2</span>
-            <a class="num" href="">3</a>
-            <a class="num" href="">489</a>
-            <a class="next" href="{{urlfor "UserController.Get"}}?page={{.nextPage}}">&gt;&gt;</a>
+            <a class="prev" href="{{urlfor "UserController.List"}}?page={{.pageMap.firstPage}}"><&lt;</a>
+            <a class="prev" href="{{urlfor "UserController.List"}}?page={{.prePage}}">&lt;</a>
+            {{range .pageMap.num_pages}}
+                {{if eq $.pageMap.currentPage .}}
+                    <span class="current">{{.}}</span>
+                {{else}}
+                    <a class="next" href="{{urlfor "UserController.List"}}?page={{.}}">{{.}}</a>
+                {{end}}
+            {{end}}
+            <a class="next" href="{{urlfor "UserController.List"}}?page={{.nextPage}}">&gt;</a>
+            <a class="next" href="{{urlfor "UserController.List"}}?page={{.pageMap.lastPage}}">&gt;&gt;</a>
         </div>
     </div>
 
@@ -146,16 +155,89 @@
         });
     });
 
+    /*用户-启用*/
+    function member_stop(id,is_active) {
+        var msg
+        if (is_active==0) {
+            msg = "确认要停用嘛？"
+        } else {
+            msg = "确认要启用嘛？"
+        }
+        layer.confirm(msg, function (index) {
+            layer.close(layer.index)
+            $.ajax({
+                url: "{{urlfor "UserController.IsActive"}}",
+                type: "post",
+                data: {
+                    "id" :id,
+                    "is_active" :is_active
+                },
+                success:function (data) {
+                    ions_alert.alertSuccessToast(data.msg)
+                    setTimeout(reolad_list,1000)
+                },
+                error:function (data) {
+                    ions_alert.alertErrorToast(data.msg)
+                    setTimeout(reolad_list,1000)
+                }
+            })
+        });
+    }
+    /* 重置密码 */
+    function resetpwd(id) {
+        layer.confirm('确认要重置密码吗？', function (index) {
+            layer.close(layer.index)
+            $.ajax({
+                url: "{{urlfor "UserController.ResetPassword"}}",
+                type: "post",
+                data: {
+                    "id" :id,
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        ions_alert.alertSuccessToast(data.msg)
+                        setTimeout(reolad_list,1000)
+                    } else  {
+                        ions_alert.alertErrorToast(data.msg)
+                        setTimeout(reolad_list,1000)
+                    }
+                },
+                error: function (data) {
 
+                }
+            })
+        })
+    }
     /*用户-删除*/
-    function member_del(obj, id) {
+    function member_del(id) {
         layer.confirm('确认要删除吗？', function (index) {
             //发异步删除数据
-            $(obj).parents("tr").remove();
-            layer.msg('已删除!', {icon: 1, time: 1000});
+            layer.close(layer.index)
+            $.ajax({
+                url: "{{urlfor "UserController.Delete"}}",
+                type: "post",
+                data: {
+                    "id" :id,
+                },
+                success: function (data) {
+                    if (data.code == 200) {
+                        ions_alert.alertSuccessToast(data.msg)
+                        setTimeout(reolad_list,1000)
+                    } else  {
+                        ions_alert.alertErrorToast(data.msg)
+                        setTimeout(reolad_list,1000)
+                    }
+                },
+                error: function (data) {
+
+                }
+            })
         });
     }
 
+    function reolad_list() {
+        window.location.href = "{{urlfor "UserController.List"}}"
+    }
 
     function delAll(argument) {
 
@@ -168,13 +250,13 @@
         });
     }
 </script>
-<script>var _hmt = _hmt || [];
-    (function () {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-    })();</script>
+{{/*<script>var _hmt = _hmt || [];*/}}
+{{/*    (function () {*/}}
+{{/*        var hm = document.createElement("script");*/}}
+{{/*        hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";*/}}
+{{/*        var s = document.getElementsByTagName("script")[0];*/}}
+{{/*        s.parentNode.insertBefore(hm, s);*/}}
+{{/*    })();</script>*/}}
 </body>
 
 </html>

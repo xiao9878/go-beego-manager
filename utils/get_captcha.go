@@ -8,7 +8,6 @@ import (
 type Captcha struct {
 	Id   string
 	BS64 string
-	Code int
 }
 
 var store = base64Captcha.DefaultMemStore

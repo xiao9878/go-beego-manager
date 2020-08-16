@@ -11,7 +11,7 @@ type User struct {
 	Password   string    `orm:"size(32);description(密码)"`
 	Age        int       `orm:"null;description(年龄)"`
 	Gender     int       `orm:"null;description(性别)"`
-	Phone      int64     `orm:"null;description(手机号)"`
+	Phone      string    `orm:"null;description(手机号)"`
 	Addr       string    `orm:"null;size(255);description(地址)"`
 	IsActive   int       `orm:"default(1);description(1启用/0停用)"`
 	IsDelete   int       `orm:"default(0);description(1删除/0未删除)"`
