@@ -54,10 +54,18 @@ func (this *UserController) List() {
 		currentPage = 1
 	}
 
-	users := []user.User{}
+	keyword := this.GetString("keyword")
 
-	count, _ := o.QueryTable(new(user.User)).Filter("is_delete", 0).Count()
-	o.QueryTable(new(user.User)).Filter("is_delete", 0).Limit(pageSize).Offset((currentPage - 1) * pageSize).All(&users)
+	users := []user.User{}
+	var count int64 = 0
+	if keyword != "" {
+		count, _ = o.QueryTable(new(user.User)).Filter("username__contains", keyword).Filter("is_delete", 0).Count()
+		o.QueryTable(new(user.User)).Filter("username__contains", keyword).Filter("is_delete", 0).Limit(pageSize).Offset((currentPage - 1) * pageSize).All(&users)
+	} else {
+		count, _ = o.QueryTable(new(user.User)).Filter("is_delete", 0).Count()
+		o.QueryTable(new(user.User)).Filter("is_delete", 0).Limit(pageSize).Offset((currentPage - 1) * pageSize).All(&users)
+	}
+
 	countPage := int(math.Ceil(float64(count) / float64(pageSize)))
 
 	prePage := 1
@@ -82,12 +90,12 @@ func (this *UserController) List() {
 	this.Data["countPage"] = countPage
 	this.Data["count"] = count
 	this.Data["pageMap"] = pageMap
+	this.Data["keyword"] = keyword
 
 	this.TplName = "user/user.html"
 }
 
 func (this *UserController) ToAdd() {
-
 	this.TplName = "user/user-add.html"
 }
 func (this *UserController) DoAdd() {
@@ -167,6 +175,51 @@ func (this *UserController) ResetPassword() {
 		res["code"] = http.StatusInternalServerError
 	} else {
 		res["msg"] = "重置成功！"
+		res["code"] = http.StatusOK
+	}
+	this.Data["json"] = res
+	this.ServeJSON()
+}
+
+func (this *UserController) ToUpdate() {
+	id, _ := this.GetInt("id")
+	u := user.User{}
+	o := orm.NewOrm()
+	o.QueryTable(new(user.User)).Filter("id", id).One(&u)
+	this.Data["user"] = u
+	this.TplName = "user/user-edit.html"
+}
+func (this *UserController) DoUpdate() {
+	//id,_ := this.GetInt("id")
+	id, _ := strconv.Atoi(this.Input().Get("id"))
+	fmt.Println(id)
+	o := orm.NewOrm()
+	_, err := o.QueryTable(new(user.User)).Filter("id", id).Update(orm.Params{"is_delete": 1})
+	res := make(map[string]interface{})
+	if err != nil {
+		res["msg"] = "出现未知错误"
+		res["code"] = http.StatusInternalServerError
+	} else {
+		res["msg"] = "修改成功！"
+		res["code"] = http.StatusOK
+	}
+	this.Data["json"] = res
+	this.ServeJSON()
+}
+func (this *UserController) MuliDel() {
+	ids := this.GetStrings("ids[]")
+	fmt.Println(ids)
+
+	o := orm.NewOrm()
+	_, err := o.QueryTable(new(user.User)).Filter("id__in", ids).Update(orm.Params{"is_delete": 1})
+
+	res := make(map[string]interface{})
+	if err != nil {
+		res["msg"] = "出现未知错误"
+		res["code"] = http.StatusInternalServerError
+		fmt.Println(err)
+	} else {
+		res["msg"] = "删除成功！"
 		res["code"] = http.StatusOK
 	}
 	this.Data["json"] = res

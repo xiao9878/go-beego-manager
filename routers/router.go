@@ -18,4 +18,6 @@ func init() {
 	beego.Router("/main/user/is_active", &user.UserController{}, "post:IsActive")
 	beego.Router("/main/user/delete", &user.UserController{}, "post:Delete")
 	beego.Router("/main/user/resetpwd", &user.UserController{}, "post:ResetPassword")
+	beego.Router("/main/user/edit", &user.UserController{}, "get:ToUpdate")
+	beego.Router("/main/user/delall", &user.UserController{}, "post:MuliDel")
 }

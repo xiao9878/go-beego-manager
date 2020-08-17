@@ -39,8 +39,10 @@
         <form class="layui-form layui-col-md12 x-so">
             <input class="layui-input" placeholder="开始日" name="start" id="start">
             <input class="layui-input" placeholder="截止日" name="end" id="end">
-            <input type="text" name="username" placeholder="请输入用户名" autocomplete="off" class="layui-input">
-            <button class="layui-btn" lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+            <input id="keyword" type="text" value="{{.keyword}}" name="username" placeholder="请输入用户名" autocomplete="off"
+                   class="layui-input">
+            <button id="search_btn" class="layui-btn"><i class="layui-icon">&#xe615;</i></button>
+            <button id="refresh" class="layui-btn"><i class="layui-icon" style="line-height:30px">ဂ</i></button>
         </form>
     </div>
     <xblock>
@@ -71,7 +73,7 @@
         {{range .users}}
             <tr>
                 <td>
-                    <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i
+                    <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id="{{.Id}}"><i
                                 class="layui-icon">&#xe605;</i></div>
                 </td>
                 <td>{{.UserName}}</td>
@@ -108,13 +110,16 @@
                         </a>
                     {{end}}
 
-                    <a title="编辑" onclick="x_admin_show('编辑','member-edit.html',600,400)" href="javascript:;">
+                    <a title="编辑" style="cursor: pointer"
+                       onclick="x_admin_show('编辑用户','{{urlfor "UserController.ToUpdate"}}?id={{.Id}}',600,500)"
+                            {{/*                       href="{{urlfor "UserController.ToUpdate"}}?id={{.Id}}"*/}}
+                    >
                         <i class="layui-icon">&#xe642;</i>
                     </a>
-                    <a title="重置密码" onclick="resetpwd({{.Id}})" href="javascript:;">
+                    <a style="cursor: pointer" title="重置密码" onclick="resetpwd({{.Id}})" href="javascript:;">
                         <i class="layui-icon">&#xe631;</i>
                     </a>
-                    <a title="删除" onclick="member_del({{.Id}})" href="javascript:;">
+                    <a style="cursor: pointer" title="删除" onclick="member_del({{.Id}})" href="javascript:;">
                         <i class="layui-icon">&#xe640;</i>
                     </a>
                 </td>
@@ -141,6 +146,19 @@
 
 </div>
 <script>
+    $(document).ready(function () {
+        $(".prev").attr("href", $(".prev").attr("href") + "&keyword={{.keyword}}")
+        $(".next").attr("href", $(".next").attr("href") + "&keyword={{.keyword}}")
+        let click = $("#refresh").click(function () {
+            debugger
+            reolad_list()
+        });
+    })
+    $("#search_btn").click(function (ev) {
+        ev.preventDefault()
+        let keyword = $("#keyword").val()
+        window.location.href = "{{urlfor "UserController.List"}}?keyword=" + keyword
+    })
     layui.use('laydate', function () {
         var laydate = layui.laydate;
 
@@ -155,10 +173,11 @@
         });
     });
 
+
     /*用户-启用*/
-    function member_stop(id,is_active) {
+    function member_stop(id, is_active) {
         var msg
-        if (is_active==0) {
+        if (is_active == 0) {
             msg = "确认要停用嘛？"
         } else {
             msg = "确认要启用嘛？"
@@ -169,20 +188,21 @@
                 url: "{{urlfor "UserController.IsActive"}}",
                 type: "post",
                 data: {
-                    "id" :id,
-                    "is_active" :is_active
+                    "id": id,
+                    "is_active": is_active
                 },
-                success:function (data) {
+                success: function (data) {
                     ions_alert.alertSuccessToast(data.msg)
-                    setTimeout(reolad_list,1000)
+                    setTimeout(reolad_list, 1000)
                 },
-                error:function (data) {
+                error: function (data) {
                     ions_alert.alertErrorToast(data.msg)
-                    setTimeout(reolad_list,1000)
+                    setTimeout(reolad_list, 1000)
                 }
             })
         });
     }
+
     /* 重置密码 */
     function resetpwd(id) {
         layer.confirm('确认要重置密码吗？', function (index) {
@@ -191,15 +211,15 @@
                 url: "{{urlfor "UserController.ResetPassword"}}",
                 type: "post",
                 data: {
-                    "id" :id,
+                    "id": id,
                 },
                 success: function (data) {
                     if (data.code == 200) {
                         ions_alert.alertSuccessToast(data.msg)
-                        setTimeout(reolad_list,1000)
-                    } else  {
+                        setTimeout(reolad_list, 1000)
+                    } else {
                         ions_alert.alertErrorToast(data.msg)
-                        setTimeout(reolad_list,1000)
+                        setTimeout(reolad_list, 1000)
                     }
                 },
                 error: function (data) {
@@ -208,6 +228,7 @@
             })
         })
     }
+
     /*用户-删除*/
     function member_del(id) {
         layer.confirm('确认要删除吗？', function (index) {
@@ -217,15 +238,15 @@
                 url: "{{urlfor "UserController.Delete"}}",
                 type: "post",
                 data: {
-                    "id" :id,
+                    "id": id,
                 },
                 success: function (data) {
                     if (data.code == 200) {
                         ions_alert.alertSuccessToast(data.msg)
-                        setTimeout(reolad_list,1000)
-                    } else  {
+                        setTimeout(reolad_list, 1000)
+                    } else {
                         ions_alert.alertErrorToast(data.msg)
-                        setTimeout(reolad_list,1000)
+                        setTimeout(reolad_list, 1000)
                     }
                 },
                 error: function (data) {
@@ -236,17 +257,35 @@
     }
 
     function reolad_list() {
+        parent.layer.close(parent.layer.getFrameIndex(window.name))
         window.location.href = "{{urlfor "UserController.List"}}"
     }
 
     function delAll(argument) {
 
         var data = tableCheck.getData();
+        layer.confirm('确认要删除吗？' + data, function (index) {
+            layer.close(layer.index)
+            $.ajax({
+                url: "{{urlfor "UserController.MuliDel"}}",
+                type: "POST",
+                data: {"ids": data},
+                success: function (data) {
+                    if (data.code == 200) {
+                        ions_alert.alertSuccessToast(data.msg)
+                        setTimeout(reolad_list, 1000)
+                    } else {
+                        ions_alert.alertErrorToast(data.msg)
+                        setTimeout(reolad_list, 1000)
+                    }
+                },
+                error: function (data) {
 
-        layer.confirm('确认要恢复吗？' + data, function (index) {
+                }
+            })
             //捉到所有被选中的，发异步进行删除
-            layer.msg('恢复成功', {icon: 1});
-            $(".layui-form-checked").not('.header').parents('tr').remove();
+            // layer.msg('恢复成功', {icon: 1});
+            // $(".layui-form-checked").not('.header').parents('tr').remove();
         });
     }
 </script>

@@ -1,6 +1,7 @@
 package login
 
 import (
+	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
@@ -21,6 +22,7 @@ type LoginController struct {
 func (this *LoginController) Get() {
 	id, base64, err := utils.GetCaptcha()
 	if err != nil {
+		logs.Error(fmt.Sprintf("验证码错误，信息：%v", err))
 		return
 	}
 	this.Data["captcha"] = utils.Captcha{Id: id, BS64: base64}
@@ -48,7 +50,6 @@ func (this *LoginController) Post() {
 	captcha_id := this.GetString("captcha_id")
 	is_ok := utils.VerityCaptcha(captcha_id, captcha)
 
-	logs.Error(is_ok)
 	res := map[string]interface{}{}
 	if !is_ok {
 		res["code"] = http.StatusBadRequest
@@ -71,6 +72,7 @@ func (this *LoginController) Post() {
 			this.SetSession("username", username)
 			res["code"] = http.StatusOK
 			res["msg"] = "登陆成功！"
+			logs.Info(fmt.Sprintf("登陆成功，登录信息%x", username))
 		}
 	}
 	this.Data["json"] = res
