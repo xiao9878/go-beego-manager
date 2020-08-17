@@ -6,6 +6,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
+	_ "manager/models/auth"
 	_ "manager/models/user"
 	_ "manager/routers"
 	"manager/utils"
@@ -20,7 +21,7 @@ func init() {
 	orm.RegisterDriver("mysql", orm.DRMySQL)
 	orm.RegisterDataBase("default", "mysql", username+":"+pwd+"@tcp("+host+":"+port+")/"+db+"?charset=utf8")
 
-	logs.Info(fmt.Errorf("连接数据库成功！连接信息：host:%s|port:%s|db:%s", host, port, db))
+	logs.Info(fmt.Sprintf("连接数据库成功！连接信息：host:%s|port:%s|db:%s", host, port, db))
 }
 func main() {
 	orm.RunCommand()

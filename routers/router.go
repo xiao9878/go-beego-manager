@@ -3,6 +3,7 @@ package routers
 import (
 	"github.com/astaxie/beego"
 	"manager/controllers"
+	"manager/controllers/auth"
 	"manager/controllers/login"
 	"manager/controllers/user"
 )
@@ -20,4 +21,7 @@ func init() {
 	beego.Router("/main/user/resetpwd", &user.UserController{}, "post:ResetPassword")
 	beego.Router("/main/user/edit", &user.UserController{}, "get:ToUpdate")
 	beego.Router("/main/user/delall", &user.UserController{}, "post:MuliDel")
+	auth := beego.NewNamespace("main/user",
+		beego.NSRouter("auth/list", &auth.AuthController{}, "get:List"))
+	beego.AddNamespace(auth)
 }
