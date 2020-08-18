@@ -40,6 +40,11 @@
     </div>
 
     <script>
+        //如果发生了页面嵌套，刷新页面
+        if (window.parent != window) {
+            window.parent.location.reload(true)
+        }
+
         $("#captcha_img").attr("src",{{.captcha.BS64}});
 
         $("#captcha_img").click(getCaptcha);

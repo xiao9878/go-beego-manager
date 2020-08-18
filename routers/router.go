@@ -10,6 +10,7 @@ import (
 
 func init() {
 	beego.Router("/", &login.LoginController{})
+	beego.Router("/test", &controllers.HomeController{}, "post:Test")
 	beego.Router("/change_captcha", &login.LoginController{}, "get:ChangCaptcha")
 	beego.Router("/main/index", &controllers.HomeController{})
 	beego.Router("/main/welcome", &controllers.HomeController{}, "get:Welcome")
@@ -21,7 +22,12 @@ func init() {
 	beego.Router("/main/user/resetpwd", &user.UserController{}, "post:ResetPassword")
 	beego.Router("/main/user/edit", &user.UserController{}, "get:ToUpdate")
 	beego.Router("/main/user/delall", &user.UserController{}, "post:MuliDel")
-	auth := beego.NewNamespace("main/user",
-		beego.NSRouter("auth/list", &auth.AuthController{}, "get:List"))
+	auth := beego.NewNamespace("main/auth",
+		beego.NSRouter("/", &auth.AuthController{}, "get:List"),
+		beego.NSRouter("add", &auth.AuthController{}, "get:ToAdd"),
+		beego.NSRouter("add", &auth.AuthController{}, "post:DoAdd"),
+		beego.NSRouter("test", &auth.AuthController{}, "get:Test"),
+	)
+
 	beego.AddNamespace(auth)
 }

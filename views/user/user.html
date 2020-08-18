@@ -207,6 +207,7 @@
     function resetpwd(id) {
         layer.confirm('确认要重置密码吗？', function (index) {
             layer.close(layer.index)
+            debugger
             $.ajax({
                 url: "{{urlfor "UserController.ResetPassword"}}",
                 type: "post",

@@ -19,7 +19,7 @@ func init() {
 	port := beego.AppConfig.String("port")
 	db := beego.AppConfig.String("db")
 	orm.RegisterDriver("mysql", orm.DRMySQL)
-	orm.RegisterDataBase("default", "mysql", username+":"+pwd+"@tcp("+host+":"+port+")/"+db+"?charset=utf8")
+	orm.RegisterDataBase("default", "mysql", username+":"+pwd+"@tcp("+host+":"+port+")/"+db+"?charset=utf8&loc=Local")
 
 	logs.Info(fmt.Sprintf("连接数据库成功！连接信息：host:%s|port:%s|db:%s", host, port, db))
 }
@@ -29,7 +29,7 @@ func main() {
 	//未登录的请求
 	beego.InsertFilter("/main/*", beego.BeforeRouter, utils.LoginFilter)
 	//日志
-	logs.SetLogger(logs.AdapterMultiFile, `{"filename":"logs/log.log","separate":"["err","info"]"}`)
+	//logs.SetLogger(logs.AdapterMultiFile, `{"filename":"logs/log.log","separate":"["err","info"]"}`)
 
 	beego.Run()
 }
