@@ -8,7 +8,6 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.2 // indirect
 	github.com/kataras/golog v0.1.2 // indirect
-	github.com/kataras/iris v0.0.1 // indirect
 	github.com/klauspost/compress v1.10.11 // indirect
 	github.com/microcosm-cc/bluemonday v1.0.4 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
