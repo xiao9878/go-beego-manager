@@ -1,11 +1,11 @@
-package login
+package controllers
 
 import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
-	"manager/models/user"
+	"manager/models"
 	"manager/utils"
 	"net/http"
 )
@@ -57,7 +57,7 @@ func (this *LoginController) Post() {
 		this.Data["json"] = res
 	} else {
 		md5_pwd := utils.GetMd5File(password)
-		user_info := user.User{}
+		user_info := models.User{}
 		o := orm.NewOrm()
 		orm.Debug = true
 		is_exist := o.QueryTable(user_info).Filter("user_name", username).Filter("password", md5_pwd).Exist() //.One(&user)

@@ -42,6 +42,25 @@
 <div class="left-nav">
     <div id="side-nav">
         <ul id="nav">
+            {{range .tree}}
+                <li>
+                    <a href="javascript:;">
+                        <i class="iconfont">&#xe6b8;</i>
+                        <cite>{{.AuthName}}</cite>
+                        <i class="iconfont nav_right">&#xe697;</i>
+                    </a>
+                    {{range .Children}}
+                        <ul class="sub-menu">
+                            <li>
+                                <a _href="{{urlfor .UrlFor}}">
+                                    <i class="iconfont">&#xe6a7;</i>
+                                    <cite>{{.AuthName}}</cite>
+                                </a>
+                            </li>
+                        </ul>
+                    {{end}}
+                </li>
+            {{end}}
             <li>
                 <a href="javascript:;">
                     <i class="iconfont">&#xe6b8;</i>

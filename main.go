@@ -6,8 +6,7 @@ import (
 	"github.com/astaxie/beego/logs"
 	"github.com/astaxie/beego/orm"
 	_ "github.com/go-sql-driver/mysql"
-	_ "manager/models/auth"
-	_ "manager/models/user"
+	_ "manager/models"
 	_ "manager/routers"
 	"manager/utils"
 )

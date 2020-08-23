@@ -1,4 +1,4 @@
-package auth
+package models
 
 type Menu struct {
 	Id       int

@@ -4,7 +4,7 @@ import (
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"manager/common"
-	"manager/models/auth"
+	"manager/models"
 )
 
 type HomeController struct {
@@ -12,6 +12,13 @@ type HomeController struct {
 }
 
 func (this *HomeController) Get() {
+	o := orm.NewOrm()
+	var auths []models.Auth
+	o.QueryTable(new(models.Auth)).Filter("is_active", 0).All(&auths)
+
+	menus := common.TreeMenu(&auths)
+
+	this.Data["tree"] = menus
 
 	//后端首页
 	this.TplName = "index.html"
@@ -23,8 +30,8 @@ func (this *HomeController) Welcome() {
 
 func (this *HomeController) Test() {
 	o := orm.NewOrm()
-	var auths []auth.Auth
-	o.QueryTable(new(auth.Auth)).Filter("is_active", 0).All(&auths)
+	var auths []models.Auth
+	o.QueryTable(new(models.Auth)).Filter("is_active", 0).All(&auths)
 
 	menus := common.TreeMenu(&auths)
 

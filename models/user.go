@@ -1,4 +1,4 @@
-package user
+package models
 
 import (
 	"github.com/astaxie/beego/orm"
@@ -16,6 +16,7 @@ type User struct {
 	IsActive   int       `orm:"default(1);description(1启用/0停用)"`
 	IsDelete   int       `orm:"default(0);description(1删除/0未删除)"`
 	CreateTime time.Time `orm:"auto_now;type(datetime);description(创建时间);null"`
+	Role       []*Role   `orm:"reverse(many)"'`
 }
 
 func (u *User) TableName() string {

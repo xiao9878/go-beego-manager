@@ -1,11 +1,11 @@
-package auth
+package controllers
 
 import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"manager/common"
-	"manager/models/auth"
+	"manager/models"
 	"manager/utils"
 	"math"
 	"time"
@@ -23,8 +23,8 @@ func (this *AuthController) List() {
 	keyword := this.GetString("keyword")
 
 	o := orm.NewOrm()
-	auths := []auth.Auth{}
-	qs := o.QueryTable(new(auth.Auth)).Filter("is_delete", 0)
+	auths := []models.Auth{}
+	qs := o.QueryTable(new(models.Auth)).Filter("is_delete", 0)
 
 	if keyword != "" {
 		this.Data["keyword"] = keyword
@@ -58,7 +58,10 @@ func (this *AuthController) List() {
 	this.TplName = "auth/auth-list.html"
 }
 func (this *AuthController) ToAdd() {
-
+	o := orm.NewOrm()
+	auths := []models.Auth{}
+	o.QueryTable(new(models.Auth)).Filter("is_active", 0).Filter("pid", 0).All(&auths)
+	this.Data["auths"] = auths
 	this.TplName = "auth/auth-add.html"
 }
 func (this *AuthController) DoAdd() {
@@ -70,7 +73,7 @@ func (this *AuthController) DoAdd() {
 	auth_weight, err2 := this.GetInt("auth_weight")
 	is_active, err3 := this.GetInt("is_active")
 	o := orm.NewOrm()
-	auth := auth.Auth{
+	auth := models.Auth{
 		AuthName:   auth_name,
 		UrlFor:     auth_url,
 		Pid:        auth_parent_id,
@@ -87,6 +90,23 @@ func (this *AuthController) DoAdd() {
 		res = common.ResServerErr("出现未知错误！请联系管理员")
 	}
 	this.Data["json"] = &res
+	this.ServeJSON()
+}
+func (this *AuthController) IsActive() {
+	id, _ := this.GetInt("id")
+	is_active, _ := this.GetInt("is_active")
+	o := orm.NewOrm()
+	qs := o.QueryTable(new(models.Auth)).Filter("id", id)
+
+	var res map[string]interface{}
+	if is_active == 1 {
+		qs.Update(orm.Params{"is_active": 0})
+		res = common.ResOk("启用成功！")
+	} else if is_active == 0 {
+		qs.Update(orm.Params{"is_active": 1})
+		res = common.ResOk("停用成功！")
+	}
+	this.Data["json"] = res
 	this.ServeJSON()
 }
 func (this *AuthController) Test() {

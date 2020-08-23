@@ -9,9 +9,10 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="/static/css/font.css">
     <link rel="stylesheet" href="/static/css/xadmin.css">
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/lib/layui/layui.js" charset="utf-8"></script>
-    <script type="text/javascript" src="/static/js/xadmin.js"></script>
+    <script src="/static/js/ions_alert.js"></script>
+    <script src="/static/common/common.js"></script>
+    <script src="/static/js/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="/static/css/sweetalert.css">
 </head>
 
 <body>
@@ -91,16 +92,18 @@
                     {{if eq .IsActive 0}}
                         <span class="layui-btn layui-btn-mini layui-btn-radius layui-btn-normal">已启用</span>
                     {{else}}
-                        <span class="layui-btn layui-btn-sm layui-btn-radius layui-btn-danger">已停用</span>
+                        <span class="layui-btn layui-btn-mini layui-btn-radius layui-btn-danger">已停用</span>
                     {{end}}
                 </td>
                 <td class="td-manage">
                     {{if eq .IsActive 1}}
-                        <a class="layui-btn layui-btn-mini layui-btn-normal is_active_btn">
+                        <a onclick="auth_stop({{.Id}},{{.IsActive}})" href="javascript:;"
+                           class="layui-btn layui-btn-mini layui-btn-normal is_active_btn">
                             <i class="layui-icon">&#xe62f;</i>启用
                         </a>
                     {{else}}
-                        <a class="layui-btn layui-btn-mini layui-btn-danger is_active_btn">
+                        <a onclick="auth_stop({{.Id}},{{.IsActive}})" href="javascript:;"
+                           class="layui-btn layui-btn-mini layui-btn-danger is_active_btn">
                             <i class="layui-icon">&#xe601;</i>停用
                         </a>
                     {{end}}
@@ -135,6 +138,7 @@
     </div>
 
 </div>
+<script src="/static/js/const.js"></script>
 <script>
 
     $(document).ready(function () {
@@ -153,59 +157,41 @@
                 elem: '#end' //指定元素
             });
         });
-    }),
+    })
 
-
-        /*用户-停用*/
-        function member_stop(obj, id) {
-            layer.confirm('确认要停用吗？', function (index) {
-
-                if ($(obj).attr('title') == '启用') {
-
-                    //发异步把用户状态进行更改
-                    $(obj).attr('title', '停用')
-                    $(obj).find('i').html('&#xe62f;');
-
-                    $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-                    layer.msg('已停用!', {icon: 5, time: 1000});
-
-                } else {
-                    $(obj).attr('title', '启用')
-                    $(obj).find('i').html('&#xe601;');
-
-                    $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-                    layer.msg('已启用!', {icon: 5, time: 1000});
-                }
-
-            });
+    function auth_stop(id, is_active) {
+        var msg = ""
+        if (is_active == 0) {
+            msg = CoformMsg.Stop
+        } else {
+            msg = CoformMsg.Start
         }
-
-    /*用户-删除*/
-    function member_del(obj, id) {
-        layer.confirm('确认要删除吗？', function (index) {
-            //发异步删除数据
-            $(obj).parents("tr").remove();
-            layer.msg('已删除!', {icon: 1, time: 1000});
-        });
+        layer.confirm(msg, function (index) {
+            layer.close(layer.index)
+            $.ajax({
+                url: "{{urlfor "AuthController.IsActive"}}",
+                type: "post",
+                data: {
+                    "id": id,
+                    "is_active": is_active
+                },
+                success: function (data) {
+                    debugger
+                    ions_alert.alertSuccessToast(data.msg)
+                    setTimeout(reolad_list, 1000)
+                },
+                error: function (data) {
+                    ions_alert.alertErrorToast(data.msg)
+                    setTimeout(reolad_list, 1000)
+                }
+            })
+        })
     }
-
-
-    function delAll(argument) {
-        var data = tableCheck.getData();
-        layer.confirm('确认要删除吗？' + data, function (index) {
-            //捉到所有被选中的，发异步进行删除
-            layer.msg('删除成功', {icon: 1});
-            $(".layui-form-checked").not('.header').parents('tr').remove();
-        });
+    function reolad_list() {
+        parent.layer.close(parent.layer.getFrameIndex(window.name))
+        window.location.href = "{{urlfor "AuthController.List"}}"
     }
 </script>
-<script>var _hmt = _hmt || [];
-    (function () {
-        var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";
-        var s = document.getElementsByTagName("script")[0];
-        s.parentNode.insertBefore(hm, s);
-    })();</script>
 </body>
 
 </html>

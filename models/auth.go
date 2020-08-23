@@ -1,4 +1,4 @@
-package auth
+package models
 
 import (
 	"github.com/astaxie/beego/orm"
@@ -15,6 +15,7 @@ type Auth struct {
 	IsDelete   int       `orm:"description(是否删除);default(0)"`
 	Weight     int       `orm:"description(权重,数值越大，排序越前)"`
 	CreateTime time.Time `orm:"type(datetime);auto_now;description(创建时间)"`
+	Role       []*Role   `orm:"reverse(many)"`
 }
 
 type Role struct {
@@ -24,6 +25,8 @@ type Role struct {
 	IsActive   int       `orm:"description(是否启用);default(0)"`
 	IsDelete   int       `orm:"description(是否删除);default(0)"`
 	CreateTime time.Time `orm:"type(datetime);auto_now_add;description(创建时间)"`
+	Auth       []*Auth   `orm:"rel(m2m)"`
+	User       []*User   `orm:"rel(m2m)"`
 }
 
 func (this *Auth) TableName() string {

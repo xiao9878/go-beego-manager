@@ -3,31 +3,39 @@ package routers
 import (
 	"github.com/astaxie/beego"
 	"manager/controllers"
-	"manager/controllers/auth"
-	"manager/controllers/login"
-	"manager/controllers/user"
 )
 
 func init() {
-	beego.Router("/", &login.LoginController{})
+	beego.Router("/", &controllers.LoginController{})
 	beego.Router("/test", &controllers.HomeController{}, "post:Test")
-	beego.Router("/change_captcha", &login.LoginController{}, "get:ChangCaptcha")
+	beego.Router("/change_captcha", &controllers.LoginController{}, "get:ChangCaptcha")
 	beego.Router("/main/index", &controllers.HomeController{})
-	beego.Router("/main/welcome", &controllers.HomeController{}, "get:Welcome")
-	beego.Router("/main/user/list", &user.UserController{}, "get:List")
-	beego.Router("/main/user/to_add", &user.UserController{}, "get:ToAdd")
-	beego.Router("/main/user/do_add", &user.UserController{}, "post:DoAdd")
-	beego.Router("/main/user/is_active", &user.UserController{}, "post:IsActive")
-	beego.Router("/main/user/delete", &user.UserController{}, "post:Delete")
-	beego.Router("/main/user/resetpwd", &user.UserController{}, "post:ResetPassword")
-	beego.Router("/main/user/edit", &user.UserController{}, "get:ToUpdate")
-	beego.Router("/main/user/delall", &user.UserController{}, "post:MuliDel")
-	auth := beego.NewNamespace("main/auth",
-		beego.NSRouter("/", &auth.AuthController{}, "get:List"),
-		beego.NSRouter("add", &auth.AuthController{}, "get:ToAdd"),
-		beego.NSRouter("add", &auth.AuthController{}, "post:DoAdd"),
-		beego.NSRouter("test", &auth.AuthController{}, "get:Test"),
+	//用户模块
+	main := beego.NewNamespace("main/user",
+		beego.NSRouter("list", &controllers.UserController{}, "get:List"),
+		beego.NSRouter("to_add", &controllers.UserController{}, "get:ToAdd"),
+		beego.NSRouter("do_add", &controllers.UserController{}, "post:DoAdd"),
+		beego.NSRouter("is_active", &controllers.UserController{}, "post:IsActive"),
+		beego.NSRouter("delete", &controllers.UserController{}, "post:Delete"),
+		beego.NSRouter("resetpwd", &controllers.UserController{}, "post:ResetPassword"),
+		beego.NSRouter("edit", &controllers.UserController{}, "get:ToUpdate"),
+		beego.NSRouter("delall", &controllers.UserController{}, "post:MuliDel"),
 	)
-
+	beego.AddNamespace(main)
+	//权限菜单模块
+	auth := beego.NewNamespace("main/auth",
+		beego.NSRouter("/", &controllers.AuthController{}, "get:List"),
+		beego.NSRouter("add", &controllers.AuthController{}, "get:ToAdd"),
+		beego.NSRouter("add", &controllers.AuthController{}, "post:DoAdd"),
+		beego.NSRouter("isActive", &controllers.AuthController{}, "post:IsActive"),
+		beego.NSRouter("test", &controllers.AuthController{}, "get:Test"),
+	)
 	beego.AddNamespace(auth)
+	role := beego.NewNamespace("main/role",
+		beego.NSRouter("list", &controllers.RoleController{}, "get:List"),
+		beego.NSRouter("add", &controllers.RoleController{}, "get:ToAdd"),
+		beego.NSRouter("add", &controllers.RoleController{}, "post:DoAdd"),
+		beego.NSRouter("to_role_user_add", &controllers.RoleController{}, "get:ToRoleUser"),
+	)
+	beego.AddNamespace(role)
 }

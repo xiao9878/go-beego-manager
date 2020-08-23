@@ -1,10 +1,10 @@
-package user
+package controllers
 
 import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
-	"manager/models/user"
+	"manager/models"
 	"manager/utils"
 	"math"
 	"net/http"
@@ -56,14 +56,14 @@ func (this *UserController) List() {
 
 	keyword := this.GetString("keyword")
 
-	users := []user.User{}
+	users := []models.User{}
 	var count int64 = 0
 	if keyword != "" {
-		count, _ = o.QueryTable(new(user.User)).Filter("username__contains", keyword).Filter("is_delete", 0).Count()
-		o.QueryTable(new(user.User)).Filter("username__contains", keyword).Filter("is_delete", 0).Limit(pageSize).Offset((currentPage - 1) * pageSize).All(&users)
+		count, _ = o.QueryTable(new(models.User)).Filter("username__contains", keyword).Filter("is_delete", 0).Count()
+		o.QueryTable(new(models.User)).Filter("username__contains", keyword).Filter("is_delete", 0).Limit(pageSize).Offset((currentPage - 1) * pageSize).All(&users)
 	} else {
-		count, _ = o.QueryTable(new(user.User)).Filter("is_delete", 0).Count()
-		o.QueryTable(new(user.User)).Filter("is_delete", 0).Limit(pageSize).Offset((currentPage - 1) * pageSize).All(&users)
+		count, _ = o.QueryTable(new(models.User)).Filter("is_delete", 0).Count()
+		o.QueryTable(new(models.User)).Filter("is_delete", 0).Limit(pageSize).Offset((currentPage - 1) * pageSize).All(&users)
 	}
 
 	countPage := int(math.Ceil(float64(count) / float64(pageSize)))
@@ -106,7 +106,7 @@ func (this *UserController) DoAdd() {
 	phone := this.GetString("phone")
 	addr := this.GetString("addr")
 	is_active, _ := this.GetInt("is_active")
-	u := user.User{
+	u := models.User{
 		UserName: username,
 		Password: utils.GetMd5File(password),
 		Age:      age,
@@ -135,7 +135,7 @@ func (this *UserController) IsActive() {
 	id, _ := this.GetInt("id")
 	is_active, _ := this.GetInt("is_active")
 	o := orm.NewOrm()
-	qs := o.QueryTable(new(user.User)).Filter("id", id)
+	qs := o.QueryTable(new(models.User)).Filter("id", id)
 
 	res := make(map[string]interface{})
 	if is_active == 1 {
@@ -153,7 +153,7 @@ func (this *UserController) Delete() {
 	id, _ := strconv.Atoi(this.Input().Get("id"))
 	fmt.Println(id)
 	o := orm.NewOrm()
-	_, err := o.QueryTable(new(user.User)).Filter("id", id).Update(orm.Params{"is_delete": 1})
+	_, err := o.QueryTable(new(models.User)).Filter("id", id).Update(orm.Params{"is_delete": 1})
 	res := make(map[string]interface{})
 	if err != nil {
 		res["msg"] = "出现未知错误"
@@ -168,7 +168,7 @@ func (this *UserController) Delete() {
 func (this *UserController) ResetPassword() {
 	id, _ := this.GetInt("id")
 	o := orm.NewOrm()
-	_, err := o.QueryTable(new(user.User)).Filter("id", id).Update(orm.Params{"password": utils.GetMd5File("123456")})
+	_, err := o.QueryTable(new(models.User)).Filter("id", id).Update(orm.Params{"password": utils.GetMd5File("123456")})
 	res := make(map[string]interface{})
 	if err != nil {
 		res["msg"] = "出现未知错误"
@@ -183,9 +183,9 @@ func (this *UserController) ResetPassword() {
 
 func (this *UserController) ToUpdate() {
 	id, _ := this.GetInt("id")
-	u := user.User{}
+	u := models.User{}
 	o := orm.NewOrm()
-	o.QueryTable(new(user.User)).Filter("id", id).One(&u)
+	o.QueryTable(new(models.User)).Filter("id", id).One(&u)
 	this.Data["user"] = u
 	this.TplName = "user/user-edit.html"
 }
@@ -194,7 +194,7 @@ func (this *UserController) DoUpdate() {
 	id, _ := strconv.Atoi(this.Input().Get("id"))
 	fmt.Println(id)
 	o := orm.NewOrm()
-	_, err := o.QueryTable(new(user.User)).Filter("id", id).Update(orm.Params{"is_delete": 1})
+	_, err := o.QueryTable(new(models.User)).Filter("id", id).Update(orm.Params{"is_delete": 1})
 	res := make(map[string]interface{})
 	if err != nil {
 		res["msg"] = "出现未知错误"
@@ -211,7 +211,7 @@ func (this *UserController) MuliDel() {
 	fmt.Println(ids)
 
 	o := orm.NewOrm()
-	_, err := o.QueryTable(new(user.User)).Filter("id__in", ids).Update(orm.Params{"is_delete": 1})
+	_, err := o.QueryTable(new(models.User)).Filter("id__in", ids).Update(orm.Params{"is_delete": 1})
 
 	res := make(map[string]interface{})
 	if err != nil {

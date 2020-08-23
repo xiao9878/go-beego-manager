@@ -8,14 +8,10 @@
     <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
     <meta http-equiv="Cache-Control" content="no-siteapp" />
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" href="../static/css/font.css">
-	<link rel="stylesheet" href="../static/css/xadmin.css">
-    <link rel="icon" href="../static/images/zlkt.ico" type="image/x-icon"/>
-    <script type="text/javascript" src="../../static/js/ztree/jquery.min.js"></script>
-{{/*    <script type="text/javascript" src="../../static/js/sweetalert2.all.js"></script>*/}}
-    <script src="../static/lib/layui/layui.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../static/js/xadmin.js"></script>
-
+    <link rel="stylesheet" href="/static/css/font.css">
+	<link rel="stylesheet" href="/static/css/xadmin.css">
+    <link rel="icon" href="/static/images/zlkt.ico" type="image/x-icon"/>
+    <script src="/static/common/common.js"></script>
 </head>
 <body class="login-bg">
     
@@ -29,7 +25,7 @@
             <input id="password" lay-verify="required" value="123456" placeholder="密码"  type="password" class="layui-input">
             <hr class="hr15">
             <div>
-                <input id="captcha" placeholder="验证码" type="text" class="layui-input" style="width: 180px;float: left">
+                <input autocomplete="off" id="captcha" placeholder="验证码" type="text" class="layui-input" style="width: 180px;float: left">
                 <img id="captcha_img" src="../static/images/code.jpg" style="cursor: pointer;width: 140px;height: 50px;float: right"/>
                 <input type="hidden" value="{{.captcha.Id}}" id="captcha_id">
             </div>
@@ -55,10 +51,10 @@
                 data:{},
                 type:"GET",
                 success:function (data) {
-                    debugger
                     if (data.code != 200) {
                         alert(data.msg)
                     } else {
+                        $("#captcha").val("")
                         $("#captcha_img").attr("src",data.captcha.BS64);
                         $("#captcha_id").attr("value",data.captcha.Id);
                     }

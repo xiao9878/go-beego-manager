@@ -9,10 +9,10 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="/static/css/font.css">
     <link rel="stylesheet" href="/static/css/sweetalert.css">
+    <link rel="stylesheet" href="/static/css/xadmin.css">
+    <script type="text/javascript" src="/static/js/ztree/jquery.min.js"></script>
     <script src="/static/js/ions_alert.js"></script>
     <script src="/static/js/sweetalert.min.js"></script>
-    <link rel="stylesheet" href="/static/css/xadmin.css">
-    <script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript" src="/static/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="/static/js/xadmin.js"></script>
 </head>
@@ -83,7 +83,7 @@
             <div class="layui-input-block">
                 <div class="layui-footer">
                     <button lay-filter="add" lay-submit class="layui-btn" id="auth_add_btn">立即提交</button>
-                    <a href="" class="layui-btn layui-btn-primary">返回</a>
+                    <button onclick="x_admin_close()" class="layui-btn layui-btn-primary">返回</button>
                 </div>
             </div>
         </div>
@@ -102,7 +102,6 @@
                 var auth_desc = $("#auth_desc").val()
                 var auth_weight = $("#auth_weight").val()
                 var is_active = $("input[name=is_active]:checked").val()
-                debugger
                 $.ajax({
                     url: "{{urlfor "AuthController.DoAdd"}}",
                     type: "POST",
@@ -115,12 +114,14 @@
                         "is_active": is_active
                     },
                     success: function (data) {
+                        x_admin_close()
                         if (data.code == 200) {
                             ions_alert.alertSuccessToast(data.msg)
+                            // setTimeout(reolad_list,1000)
                         } else {
                             ions_alert.alertErrorToast(data.msg)
+                            // setTimeout(reolad_list,1000)
                         }
-                        setTimeout(reolad_list,1000)
                     },
                     error: function (data) {
                         ions_alert.alertErrorToast(data.msg)
