@@ -6,8 +6,6 @@
     <title>欢迎页面-X-admin2.0</title>
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="viewport"
-          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="../../static/css/font.css">
     <link rel="stylesheet" href="../../static/css/xadmin.css">
@@ -83,11 +81,11 @@
                 <td>{{.Desc}}</td>
                 <td>{{date .CreateTime "Y-m-d H:m:s"}}</td>
                 <td>
-                    <a style="cursor:pointer;" title="权限配置" onclick="x_admin_show('权限配置','./role-auth-add.html')">
+                    <a style="cursor:pointer;" title="权限配置" onclick="x_admin_show('权限配置','{{urlfor "RoleController.ToRoleAuth"}}?role_id={{.Id}}')">
                         <i class="layui-icon" style="font-size: 20px; color: #a9c4ff;">&#xe631;</i>
                     </a>
 
-                    <a style="cursor:pointer;" title="用户配置" onclick="x_admin_show('用户配置','{{urlfor "AuthorController.ToRoleUser"}}?role_id={{.Id}}')">
+                    <a style="cursor:pointer;" title="用户配置" onclick="x_admin_show('用户配置','{{urlfor "RoleController.ToRoleUser"}}?role_id={{.Id}}')">
                         <!--onClick="return confirm('请启用后配置用户');"-->
                         <i class="layui-icon" style="font-size: 20px; color: #0633dd;">&#xe770;</i>
                     </a>

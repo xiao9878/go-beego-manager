@@ -36,6 +36,10 @@ func init() {
 		beego.NSRouter("add", &controllers.RoleController{}, "get:ToAdd"),
 		beego.NSRouter("add", &controllers.RoleController{}, "post:DoAdd"),
 		beego.NSRouter("to_role_user_add", &controllers.RoleController{}, "get:ToRoleUser"),
+		beego.NSRouter("to_role_user_add", &controllers.RoleController{}, "post:DoRoleUser"),
+		beego.NSRouter("to_role_auth_add", &controllers.RoleController{}, "get:ToRoleAuth"),
+		beego.NSRouter("to_role_auth_add", &controllers.RoleController{}, "post:DoRoleAuth"),
+		beego.NSRouter("get-auth-json", &controllers.RoleController{}, "get:GetAuthJson"),
 	)
 	beego.AddNamespace(role)
 }
