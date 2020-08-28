@@ -50,6 +50,7 @@ func (this *LoginController) Post() {
 	captcha_id := this.GetString("captcha_id")
 	is_ok := utils.VerityCaptcha(captcha_id, captcha)
 
+	user_info := models.User{}
 	res := map[string]interface{}{}
 	if !is_ok {
 		res["code"] = http.StatusBadRequest
@@ -57,7 +58,6 @@ func (this *LoginController) Post() {
 		this.Data["json"] = res
 	} else {
 		md5_pwd := utils.GetMd5File(password)
-		user_info := models.User{}
 		o := orm.NewOrm()
 		orm.Debug = true
 		is_exist := o.QueryTable(user_info).Filter("user_name", username).Filter("password", md5_pwd).Exist() //.One(&user)
@@ -69,7 +69,7 @@ func (this *LoginController) Post() {
 			res["code"] = http.StatusPaymentRequired
 			res["msg"] = "用户被禁用！"
 		} else {
-			this.SetSession("username", username)
+			this.SetSession("id", user_info.Id)
 			res["code"] = http.StatusOK
 			res["msg"] = "登陆成功！"
 			logs.Info(fmt.Sprintf("登陆成功，登录信息%x", username))
@@ -77,4 +77,8 @@ func (this *LoginController) Post() {
 	}
 	this.Data["json"] = res
 	this.ServeJSON()
+}
+func (this *LoginController) LogOut() {
+	this.DelSession("id")
+	this.Redirect(beego.URLFor("LoginController.Get"), http.StatusFound)
 }

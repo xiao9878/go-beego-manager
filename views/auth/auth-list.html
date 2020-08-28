@@ -123,17 +123,17 @@
     <div class="page">
         <div>
             <span class="current">共{{.countPage}}页</span>
-            <a class="prev" href="{{urlfor "AuthController.List"}}?page={{.pageMap.firstPage}}"><&lt;</a>
-            <a class="prev" href="{{urlfor "AuthController.List"}}?page={{.prePage}}">&lt;</a>
+            <a class="prev" href="{{urlfor "AuthController.List"}}?page={{.pageMap.firstPage}}&keyword={{.keyword}}"><&lt;</a>
+            <a class="prev" href="{{urlfor "AuthController.List"}}?page={{.prePage}}&keyword={{.keyword}}">&lt;</a>
             {{range .pageMap.num_pages}}
                 {{if eq $.pageMap.currentPage .}}
                     <span class="current">{{.}}</span>
                 {{else}}
-                    <a class="next" href="{{urlfor "AuthController.List"}}?page={{.}}">{{.}}</a>
+                    <a class="next" href="{{urlfor "AuthController.List"}}?page={{.}}&keyword={{$.keyword}}">{{.}}</a>
                 {{end}}
             {{end}}
-            <a class="next" href="{{urlfor "AuthController.List"}}?page={{.nextPage}}">&gt;</a>
-            <a class="next" href="{{urlfor "AuthController.List"}}?page={{.pageMap.lastPage}}">&gt;&gt;</a>
+            <a class="next" href="{{urlfor "AuthController.List"}}?page={{.nextPage}}&keyword={{.keyword}}">&gt;</a>
+            <a class="next" href="{{urlfor "AuthController.List"}}?page={{.pageMap.lastPage}}&keyword={{.keyword}}">&gt;&gt;</a>
         </div>
     </div>
 
@@ -142,8 +142,6 @@
 <script>
 
     $(document).ready(function () {
-        $(".prev").attr("href", $(".prev").attr("href") + "&keyword={{.keyword}}")
-        $(".next").attr("href", $(".next").attr("href") + "&keyword={{.keyword}}")
         layui.use('laydate', function () {
             var laydate = layui.laydate;
 

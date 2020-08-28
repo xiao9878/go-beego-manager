@@ -7,6 +7,7 @@ import (
 
 func init() {
 	beego.Router("/", &controllers.LoginController{})
+	beego.Router("/log_out", &controllers.LoginController{}, "get:LogOut")
 	beego.Router("/test", &controllers.HomeController{}, "post:Test")
 	beego.Router("/change_captcha", &controllers.LoginController{}, "get:ChangCaptcha")
 	beego.Router("/main/index", &controllers.HomeController{})
@@ -20,6 +21,12 @@ func init() {
 		beego.NSRouter("resetpwd", &controllers.UserController{}, "post:ResetPassword"),
 		beego.NSRouter("edit", &controllers.UserController{}, "get:ToUpdate"),
 		beego.NSRouter("delall", &controllers.UserController{}, "post:MuliDel"),
+		//个人中心
+		beego.NSRouter("person", &controllers.PersonController{}),
+		beego.NSRouter("salary", &controllers.SalaryController{}),
+		beego.NSRouter("salary_detail", &controllers.SalaryController{}, "get:Detail"),
+		beego.NSRouter("finance_list", &controllers.FinanceController{}),
+		beego.NSRouter("finance_detail", &controllers.FinanceController{}, "get:Detail"),
 	)
 	beego.AddNamespace(main)
 	//权限菜单模块

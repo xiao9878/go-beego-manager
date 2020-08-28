@@ -123,25 +123,23 @@
     <div class="page">
         <div>
             <span class="current">共{{.countPage}}页</span>
-            <a class="prev" href="{{urlfor "UserController.List"}}?page={{.pageMap.firstPage}}"><&lt;</a>
-            <a class="prev" href="{{urlfor "UserController.List"}}?page={{.prePage}}">&lt;</a>
+            <a class="prev" href="{{urlfor "UserController.List"}}?page={{.pageMap.firstPage}}&keyword={{.keyword}}"><&lt;</a>
+            <a class="prev" href="{{urlfor "UserController.List"}}?page={{.prePage}}&keyword={{.keyword}}">&lt;</a>
             {{range .pageMap.num_pages}}
-                {{if eq $.pageMap.currentPage .}}
+                {{if eq . $.pageMap.currentPage}}
                     <span class="current">{{.}}</span>
                 {{else}}
-                    <a class="next" href="{{urlfor "UserController.List"}}?page={{.}}">{{.}}</a>
+                    <a class="next" href="{{urlfor "UserController.List"}}?page={{.}}&keyword={{$.keyword}}">{{.}}</a>
                 {{end}}
             {{end}}
-            <a class="next" href="{{urlfor "UserController.List"}}?page={{.nextPage}}">&gt;</a>
-            <a class="next" href="{{urlfor "UserController.List"}}?page={{.pageMap.lastPage}}">&gt;&gt;</a>
+            <a class="next" href="{{urlfor "UserController.List"}}?page={{.nextPage}}&keyword={{.keyword}}">&gt;</a>
+            <a class="next" href="{{urlfor "UserController.List"}}?page={{.pageMap.lastPage}}&keyword={{.keyword}}">&gt;&gt;</a>
         </div>
     </div>
 
 </div>
 <script>
     $(document).ready(function () {
-        $(".prev").attr("href", $(".prev").attr("href") + "&keyword={{.keyword}}")
-        $(".next").attr("href", $(".next").attr("href") + "&keyword={{.keyword}}")
         let click = $("#refresh").click(function () {
             debugger
             reolad_list()
@@ -283,13 +281,6 @@
         });
     }
 </script>
-{{/*<script>var _hmt = _hmt || [];*/}}
-{{/*    (function () {*/}}
-{{/*        var hm = document.createElement("script");*/}}
-{{/*        hm.src = "https://hm.baidu.com/hm.js?b393d153aeb26b46e9431fabaf0f6190";*/}}
-{{/*        var s = document.getElementsByTagName("script")[0];*/}}
-{{/*        s.parentNode.insertBefore(hm, s);*/}}
-{{/*    })();</script>*/}}
 </body>
 
 </html>

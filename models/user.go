@@ -7,6 +7,7 @@ import (
 
 type User struct {
 	Id         int       `orm:"pk;auto"`
+	CardId     string    `orm:"size(64);column(card_id);description(工号)"`
 	UserName   string    `orm:"unique;column(user_name);size(64);description(用户名)"`
 	Password   string    `orm:"size(32);description(密码)"`
 	Age        int       `orm:"null;description(年龄)"`

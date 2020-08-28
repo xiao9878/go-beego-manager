@@ -12,13 +12,32 @@ type HomeController struct {
 }
 
 func (this *HomeController) Get() {
+
+	user_id := this.GetSession("id").(int)
+
+	user := models.User{Id: user_id}
+
 	o := orm.NewOrm()
+
+	o.LoadRelated(&user, "Role")
+
+	var auth_arr []int
+	for _, role := range user.Role {
+		role_data := models.Role{Id: role.Id}
+		o.LoadRelated(&role_data, "Auth")
+		for _, auth := range role_data.Auth {
+			auth_arr = append(auth_arr, auth.Id)
+		}
+	}
+
 	var auths []models.Auth
-	o.QueryTable(new(models.Auth)).Filter("is_active", 0).All(&auths)
+	o.QueryTable(new(models.Auth)).Filter("is_active", 0).Filter("id__in", auth_arr).All(&auths)
+	o.QueryTable(new(models.User)).Filter("id", user_id).One(&user)
 
 	menus := common.TreeMenu(&auths)
 
 	this.Data["tree"] = menus
+	this.Data["user"] = user
 
 	//后端首页
 	this.TplName = "index.html"
@@ -30,12 +49,14 @@ func (this *HomeController) Welcome() {
 
 func (this *HomeController) Test() {
 	o := orm.NewOrm()
-	var auths []models.Auth
-	o.QueryTable(new(models.Auth)).Filter("is_active", 0).All(&auths)
 
-	menus := common.TreeMenu(&auths)
+	var list []map[string]interface{}
 
-	this.Data["json"] = common.ResOk("", menus)
+	o.Raw("select * from sys_user").QueryRows(&list)
+
+	//o.QueryTable("sys_user").All(list, "id", "user_name")
+
+	this.Data["json"] = common.ResOk("", list)
 	this.ServeJSON()
 }
 

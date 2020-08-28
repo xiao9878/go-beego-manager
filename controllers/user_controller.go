@@ -83,6 +83,7 @@ func (this *UserController) List() {
 
 	pageMap := utils.Paginator(currentPage, pageSize, count)
 
+	this.Data["keyword"] = keyword
 	this.Data["users"] = users
 	this.Data["prePage"] = prePage
 	this.Data["nextPage"] = nextPage
@@ -192,7 +193,6 @@ func (this *UserController) ToUpdate() {
 func (this *UserController) DoUpdate() {
 	//id,_ := this.GetInt("id")
 	id, _ := strconv.Atoi(this.Input().Get("id"))
-	fmt.Println(id)
 	o := orm.NewOrm()
 	_, err := o.QueryTable(new(models.User)).Filter("id", id).Update(orm.Params{"is_delete": 1})
 	res := make(map[string]interface{})

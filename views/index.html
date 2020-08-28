@@ -11,8 +11,8 @@
     <link rel="stylesheet" href="/static/css/xadmin.css">
     <link rel="icon" href="/static/images/zlkt.ico" type="image/x-icon"/>
     <script type="text/javascript" src="/static/js/ztree/jquery.min.js"></script>
-    <script src="../static/lib/layui/layui.js" charset="utf-8"></script>
-    <script type="text/javascript" src="../static/js/xadmin.js"></script>
+    <script src="/static/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/static/js/xadmin.js"></script>
 
 </head>
 <body>
@@ -25,11 +25,11 @@
 
     <ul class="layui-nav right" lay-filter="">
         <li class="layui-nav-item">
-            <a href="javascript:;"><span class="tag">1</span>admin</a>
+            <a href="javascript:;"><span class="tag">1</span>{{.user.UserName}}</a>
             <dl class="layui-nav-child"> <!-- 二级菜单 -->
-                <dd><a onclick="x_admin_show('个人信息','http://www.baidu.com')">个人信息</a></dd>
-                <dd><a onclick="x_admin_show('消息通知','http://www.baidu.com')">消息通知</a></dd>
-                <dd><a href="./login.html">退出</a></dd>
+                <dd><a style="cursor: pointer" onclick="x_admin_show('个人信息','')">个人信息</a></dd>
+                <dd><a style="cursor: pointer" onclick="x_admin_show('消息通知','')">消息通知</a></dd>
+                <dd><a href="{{urlfor "LoginController.LogOut"}}">退出</a></dd>
             </dl>
         </li>
         <li class="layui-nav-item to-index"><a href="http://zlkt.ablesky.com/" target="_blank">前台首页</a></li>
