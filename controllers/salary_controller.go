@@ -24,7 +24,7 @@ func (this *SalaryController) Get() {
 
 	this.Data["salary"] = salary
 	this.Data["month"] = month
-	this.TplName = "user/pays-list.html"
+	this.TplName = "user/salary-list.html"
 }
 
 func (this *SalaryController) Detail() {

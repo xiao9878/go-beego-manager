@@ -23,12 +23,17 @@ func init() {
 		beego.NSRouter("delall", &controllers.UserController{}, "post:MuliDel"),
 		//个人中心
 		beego.NSRouter("person", &controllers.PersonController{}),
+	)
+	//财务管理模块
+	finance := beego.NewNamespace("main/finance",
 		beego.NSRouter("salary", &controllers.SalaryController{}),
 		beego.NSRouter("salary_detail", &controllers.SalaryController{}, "get:Detail"),
 		beego.NSRouter("finance_list", &controllers.FinanceController{}),
 		beego.NSRouter("finance_detail", &controllers.FinanceController{}, "get:Detail"),
+		beego.NSRouter("import_excel", &controllers.FinanceController{}, "get:ToImportExcel"),
+		beego.NSRouter("import_excel", &controllers.FinanceController{}, "post:DoImportExcel"),
 	)
-	beego.AddNamespace(main)
+	beego.AddNamespace(main, finance)
 	//权限菜单模块
 	auth := beego.NewNamespace("main/auth",
 		beego.NSRouter("/", &controllers.AuthController{}, "get:List"),

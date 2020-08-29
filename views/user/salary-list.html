@@ -8,9 +8,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="/static/css/font.css">
-    <link rel="stylesheet" href="/static/css/sweetalert.css">
-    <script src="/static/js/ions_alert.js"></script>
-    <script src="/static/js/sweetalert.min.js"></script>
     <link rel="stylesheet" href="/static/css/xadmin.css">
     <script type="text/javascript" src="/static/js/ztree/jquery.min.js"></script>
     <script type="text/javascript" src="/static/lib/layui/layui.js" charset="utf-8"></script>
@@ -18,138 +15,81 @@
 </head>
 
 <body>
+<div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">个人中心</a>
+        <a>
+          <cite>工资条</cite></a>
+      </span>
+    <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right"
+       href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+</div>
 <div class="x-body">
-    <form class="layui-form">
-        <div class="layui-form-item">
-            <label for="L_email" class="layui-form-label">
-                <span class="x-red">*</span>工号
-            </label>
-            <div class="layui-input-inline">
-                <input type="text" id="username" name="username" lay-verify="required"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label for="L_username" class="layui-form-label">
-                <span class="x-red">*</span>密码
-            </label>
-            <div class="layui-input-inline">
-                <input type="password" id="password" name="password" lay-verify="password"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label for="L_pass" class="layui-form-label">
-                <span class="x-red">*</span>年龄
-            </label>
-            <div class="layui-input-inline">
-                <input type="text" id="age" name="age" lay-verify="required"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label for="L_repass" class="layui-form-label">
-                <span class="x-red">*</span>性别
-            </label>
-            <div class="layui-input-inline">
-                <input type="radio" name="gender" lay-verify="required" checked
-                       autocomplete="off" class="layui-input" title="男" value="1">
-                <input type="radio" name="gender" lay-verify="required"
-                       autocomplete="off" class="layui-input" title="女" value="2">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label for="L_repass" class="layui-form-label">
-                <span class="x-red">*</span>电话号码
-            </label>
-            <div class="layui-input-inline">
-                <input type="text" id="phone" name="phone" required="" lay-verify="phone"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label for="L_email" class="layui-form-label">
-                <span class="x-red">*</span>地址
-            </label>
-            <div class="layui-input-inline">
-                <input type="text" id="addr" name="addr" lay-verify="required"
-                       autocomplete="off" class="layui-input">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label for="L_repass" class="layui-form-label">
-                <span class="x-red">*</span>是否启用
-            </label>
-            <div class="layui-input-inline">
-                <input type="radio" name="is_active" required="" lay-verify="repass" checked
-                       autocomplete="off" class="layui-input" value="1" title="启用">
+    <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so">
+            <input class="layui-input" placeholder="请选择月份" value="{{.month}}" id="salary_month">
+            <button type="button" class="layui-btn" id="search"><i class="layui-icon">&#xe615;</i></button>
+        </form>
+    </div>
+    <xblock>
+        <button class="layui-btn" onclick="x_admin_show('导入','./member-add.html',600,400)"><i class="layui-icon"></i>导入
+        </button>
 
-                <input type="radio" name="is_active" required="" lay-verify="repass"
-                       autocomplete="off" class="layui-input" value="0" title="停用">
-            </div>
-        </div>
-        <div class="layui-form-item">
-            <label for="L_repass" class="layui-form-label">
-            </label>
-            <button class="layui-btn" lay-filter="add" lay-submit>
-                提交
-            </button>
-        </div>
-    </form>
+        <span class="x-right" style="line-height:40px">共有数据：{{.count}} 条</span>
+    </xblock>
+    <table class="layui-table">
+        <thead>
+        <tr>
+            <th>工号</th>
+            <th>工资月份</th>
+            <th>工作天数</th>
+            <th>奖金</th>
+            <th>个税</th>
+            <th>罚金</th>
+            <th>补贴</th>
+            <th>社保</th>
+            <th>实发工资</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{.salary.CardId}}</td>
+                <td>{{.salary.PayDate}}</td>
+                <td>{{.salary.WorkDay}}</td>
+                <td>{{.salary.Reward}}</td>
+                <td>{{.salary.Tax}}</td>
+                <td>{{.salary.Fine}}</td>
+                <td>{{.salary.Perk}}</td>
+                <td>{{.salary.Social}}</td>
+                <td>{{.salary.NetSalary}}</td>
+                <td class="td-manage">
+                    <button class="layui-btn" onclick="x_admin_show('查看详情','{{urlfor "FinanceController.Detail"}}?id={{.salary.Id}}',600,600)"><i
+                                class="layui-icon">&#xe63c;</i>查看详情
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 <script>
     $(function () {
-        // ev.preventDefault();
-        layui.use('form',function () {
-            //监听提交
-            var form = layui.form;
-            form.on('submit(add)', function (data) {
-                var username = $("#username").val()
-                var password = $("#password").val()
-                var age = $("#age").val()
-                var gender = $("input[name='gender']:checked").val()
-                var phone = $("#phone").val()
-                var addr = $("#addr").val()
-                var is_active = $("input[name='is_active']:checked").val()
-                if (password.length < 6) {
-                    layer.alert("密码长度不能小于6个字符")
-                    return
-                }
-                $.ajax({
-                    url: "{{urlfor "UserController.DoAdd"}}",
-                    type: "POST",
-                    data: {
-                        "username": username,
-                        "password": password,
-                        "age": age,
-                        "gender": gender,
-                        "phone": phone,
-                        "addr": addr,
-                        "is_active": is_active,
-                    },
-                    success: function (data) {
-                        layer.close(layer.index)
-                        debugger
-                        alert("testr")
-                        if (data.code == 200) {
-                            // ions_alert.alertSuccessToast(data["msg"])
-                            {{/*setTimeout(window.location.href = "{{urlfor "UserController.List"}}", 2000)*/}}
-                            ions_alert.alertErrorToast(data.msg)
-                        } else {
-                            ions_alert.alertErrorToast(data.msg)
-                        }
-                        console.log("回调结束了")
-                    },
-                    error: function (data) {
-                        alert(data.msg)
-                    },
-                })
-                //关闭当前frame
-                // parent.layer.close(index);
-            })
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            //执行一个laydate实例
+            laydate.render({
+                elem: '#salary_month', //指定元素.
+                type: 'month'
+            });
+        });
+        $("#search").click(function () {
+            var month = $("#salary_month").val()
+            window.location.href = '{{urlfor "SalaryController.Get"}}?month='+month
         })
     })
-
 </script>
 </body>
 

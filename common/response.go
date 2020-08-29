@@ -13,7 +13,7 @@ func ResOk(msg string, data ...interface{}) map[string]interface{} {
 		res["msg"] = msg
 	}
 	if len(data) > 0 {
-		res["data"] = data[0]
+		res["data"] = data
 	}
 	return res
 }
