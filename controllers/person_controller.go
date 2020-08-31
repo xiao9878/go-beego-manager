@@ -16,7 +16,7 @@ func (this *PersonController) Get() {
 	var user models.User
 	orm.NewOrm().QueryTable(new(models.User)).Filter("id", id).One(&user)
 	this.Data["user"] = user
-	this.TplName = "user/person.html"
+	this.TplName = "user/person-center.html"
 }
 
 func (this *PersonController) Post() {

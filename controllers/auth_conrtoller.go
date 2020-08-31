@@ -16,14 +16,13 @@ type AuthController struct {
 }
 
 func (this *AuthController) List() {
-	pageSize := 10
 
-	currentPage, _ := this.GetInt("page", 0)
-
+	pageSize, _ := this.GetInt("pageSize", 10)
+	currentPage, _ := this.GetInt("page", 1)
 	keyword := this.GetString("keyword")
 
 	o := orm.NewOrm()
-	auths := []models.Auth{}
+	var auths []models.Auth
 	qs := o.QueryTable(new(models.Auth)).Filter("is_delete", 0)
 
 	if keyword != "" {
@@ -55,6 +54,7 @@ func (this *AuthController) List() {
 	this.Data["countPage"] = countPage
 	this.Data["count"] = count
 	this.Data["pageMap"] = pageMap
+
 	this.TplName = "auth/auth-list.html"
 }
 func (this *AuthController) ToAdd() {

@@ -24,16 +24,21 @@ func init() {
 		//个人中心
 		beego.NSRouter("person", &controllers.PersonController{}),
 	)
-	//财务管理模块
-	finance := beego.NewNamespace("main/finance",
+	//工资模块
+	salary := beego.NewNamespace("main/salary",
 		beego.NSRouter("salary", &controllers.SalaryController{}),
 		beego.NSRouter("salary_detail", &controllers.SalaryController{}, "get:Detail"),
 		beego.NSRouter("finance_list", &controllers.FinanceController{}),
 		beego.NSRouter("finance_detail", &controllers.FinanceController{}, "get:Detail"),
-		beego.NSRouter("import_excel", &controllers.FinanceController{}, "get:ToImportExcel"),
-		beego.NSRouter("import_excel", &controllers.FinanceController{}, "post:DoImportExcel"),
+		beego.NSRouter("import_salary", &controllers.FinanceController{}, "get:ToImport"),
+		beego.NSRouter("import_salary", &controllers.FinanceController{}, "post:DoImport"),
 	)
-	beego.AddNamespace(main, finance)
+	//财务管理模块
+	finance := beego.NewNamespace("main/finance",
+		beego.NSRouter("finance_data_list", &controllers.FinanceDataController{}),
+		beego.NSRouter("import_finance", &controllers.FinanceDataController{}, "get:ToImport"),
+		beego.NSRouter("import_finance", &controllers.FinanceDataController{}, "post:DoImport"),
+	)
 	//权限菜单模块
 	auth := beego.NewNamespace("main/auth",
 		beego.NSRouter("/", &controllers.AuthController{}, "get:List"),
@@ -42,7 +47,6 @@ func init() {
 		beego.NSRouter("isActive", &controllers.AuthController{}, "post:IsActive"),
 		beego.NSRouter("test", &controllers.AuthController{}, "get:Test"),
 	)
-	beego.AddNamespace(auth)
 	role := beego.NewNamespace("main/role",
 		beego.NSRouter("list", &controllers.RoleController{}, "get:List"),
 		beego.NSRouter("add", &controllers.RoleController{}, "get:ToAdd"),
@@ -53,5 +57,10 @@ func init() {
 		beego.NSRouter("to_role_auth_add", &controllers.RoleController{}, "post:DoRoleAuth"),
 		beego.NSRouter("get-auth-json", &controllers.RoleController{}, "get:GetAuthJson"),
 	)
-	beego.AddNamespace(role)
+	//内容管理
+	news := beego.NewNamespace("main/",
+		beego.NSRouter("cate", &controllers.CateController{}),
+		beego.NSRouter("news", &controllers.CateController{}),
+	)
+	beego.AddNamespace(main, salary, finance, auth, role, news)
 }

@@ -18,7 +18,7 @@ func (this *RoleController) List() {
 
 	pageSize := 10
 
-	currentPage, _ := this.GetInt("page", 0)
+	currentPage, _ := this.GetInt("page", 1)
 
 	o := orm.NewOrm()
 	roles := []models.Role{}

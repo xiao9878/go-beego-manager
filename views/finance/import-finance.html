@@ -22,7 +22,7 @@
     <form class="layui-form">
         <div class="layui-form-item">
             <label for="L_email" class="layui-form-label">
-                <span class="x-red">*</span>添加用户
+                <span class="x-red">*</span>导入财务报表
             </label>
             <div class="layui-input-inline">
                 <input id="upload_file" type="file" placeholder="选择文件进行导入" class="layui-input">
@@ -41,19 +41,26 @@
 <script>
     function upload() {
         var file = $("#upload_file")[0].files[0]
-        debugger
         var formData = new FormData()
-        formData.append("file",file)
+        formData.append("file", file)
         $.ajax({
-            url: '{{urlfor "FinanceController.DoImportExcel"}}',
+            url: '{{urlfor "FinanceDataController.DoImport"}}',
             type: "POST",
             data: formData,
-            processData : false, // 使数据不做处理
-            contentType : false, // 不要设置Content-Type请求头
+            processData: false, // 使数据不做处理
+            contentType: false, // 不要设置Content-Type请求头
             success: function (data) {
-                layer.alert(data.msg)
-                if (data.data.length>0) {
-                    layer.alert("重复的数据有"+data.data.toString())
+                if (data.code == 200) {
+                    if (data.data.length > 0) {
+                        layer.alert("重复的数据有" + data.data.toString())
+                    } else {
+                        layer.alert(data.msg)
+                    }
+                    setTimeout(function () {
+                        parent.location.reload()
+                    }, 2000)
+                } else {
+                    layer.alert(data.msg)
                 }
             },
             error: function (data) {

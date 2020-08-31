@@ -53,7 +53,7 @@ func (this *FinanceController) Get() {
 	this.Data["countPage"] = countPage
 	this.Data["count"] = count
 	this.Data["pageMap"] = pageMap
-	this.TplName = "user/finance-list.html"
+	this.TplName = "salary/salary-list.html"
 }
 
 func (this *FinanceController) Detail() {
@@ -61,15 +61,14 @@ func (this *FinanceController) Detail() {
 	var salary models.Salary
 	orm.NewOrm().QueryTable(new(models.Salary)).Filter("id", id).One(&salary)
 	this.Data["salary"] = salary
-	this.TplName = "user/salary-detail.html"
+	this.TplName = "salary/salary-detail.html"
 }
 
-func (this *FinanceController) ToImportExcel() {
-	this.TplName = "finance/import-excel.html"
+func (this *FinanceController) ToImport() {
+	this.TplName = "salary/import-salary.html"
 }
-func (this *FinanceController) DoImportExcel() {
-	file, header, err := this.GetFile("file")
-	defer file.Close()
+func (this *FinanceController) DoImport() {
+	_, header, err := this.GetFile("file")
 	res := make(map[string]interface{})
 	if err != nil {
 		res = common.ResServerErr("出现未知错误，请联系网站管理员" + err.Error())

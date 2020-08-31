@@ -34,7 +34,7 @@
         </form>
     </div>
     <xblock>
-        <button class="layui-btn" onclick="x_admin_show('导入','{{urlfor "FinanceController.ToImportExcel"}}',600,400)"><i class="layui-icon"></i>导入
+        <button class="layui-btn" onclick="x_admin_show('财务导入','{{urlfor "FinanceDataController.ToImport"}}',600,400)"><i class="layui-icon"></i>导入
         </button>
 
         <span class="x-right" style="line-height:40px">共有数据：{{.count}} 条</span>
@@ -42,32 +42,28 @@
     <table class="layui-table">
         <thead>
         <tr>
-            <th>工号</th>
-            <th>工资月份</th>
-            <th>工作天数</th>
-            <th>奖金</th>
-            <th>个税</th>
-            <th>罚金</th>
-            <th>补贴</th>
-            <th>社保</th>
-            <th>实发工资</th>
+            <th>月份</th>
+            <th>销售额</th>
+            <th>学员增加数</th>
+            <th>SpringBoot</th>
+            <th>SpringCloud</th>
+            <th>Vue</th>
+            <th>React</th>
             <th>操作</th>
         </tr>
         </thead>
         <tbody>
-        {{range .salary}}
+        {{range .data}}
             <tr>
-                <td>{{.CardId}}</td>
-                <td>{{.PayDate}}</td>
-                <td>{{.WorkDay}}</td>
-                <td>{{.Reward}}</td>
-                <td>{{.Tax}}</td>
-                <td>{{.Fine}}</td>
-                <td>{{.Perk}}</td>
-                <td>{{.Social}}</td>
-                <td>{{.NetSalary}}</td>
+                <td>{{.FinanceDate}}</td>
+                <td>{{.SalesVolume}}</td>
+                <td>{{.StudentIncrease}}</td>
+                <td>{{.BootNum}}</td>
+                <td>{{.CloudNum}}</td>
+                <td>{{.VueNum}}</td>
+                <td>{{.ReactNum}}</td>
                 <td class="td-manage">
-                    <button class="layui-btn" onclick="x_admin_show('查看详情','{{urlfor "FinanceController.Detail"}}?id={{.Id}}',600,600)"><i
+                    <button class="layui-btn" onclick="x_admin_show('查看详情','{{urlfor "FinanceDataController.Detail"}}?id={{.Id}}',600,600)"><i
                                 class="layui-icon">&#xe63c;</i>查看详情
                     </button>
                 </td>
@@ -78,17 +74,17 @@
     <div class="page">
         <div>
             <span class="current">共{{.countPage}}页</span>
-            <a class="prev" href="{{urlfor "FinanceController.Get"}}?page={{.pageMap.firstPage}}"><&lt;</a>
-            <a class="prev" href="{{urlfor "FinanceController.Get"}}?page={{.prePage}}">&lt;</a>
+            <a class="prev" href="{{urlfor "FinanceDataController.Get"}}?page={{.pageMap.firstPage}}"><&lt;</a>
+            <a class="prev" href="{{urlfor "FinanceDataController.Get"}}?page={{.prePage}}">&lt;</a>
             {{range .pageMap.num_pages}}
                 {{if eq $.pageMap.currentPage .}}
                     <span class="current">{{.}}</span>
                 {{else}}
-                    <a class="next" href="{{urlfor "FinanceController.Get"}}?page={{.}}">{{.}}</a>
+                    <a class="next" href="{{urlfor "FinanceDataController.Get"}}?page={{.}}">{{.}}</a>
                 {{end}}
             {{end}}
-            <a class="next" href="{{urlfor "FinanceController.Get"}}?page={{.nextPage}}">&gt;</a>
-            <a class="next" href="{{urlfor "FinanceController.Get"}}?page={{.pageMap.lastPage}}">&gt;&gt;</a>
+            <a class="next" href="{{urlfor "FinanceDataController.Get"}}?page={{.nextPage}}">&gt;</a>
+            <a class="next" href="{{urlfor "FinanceDataController.Get"}}?page={{.pageMap.lastPage}}">&gt;&gt;</a>
         </div>
     </div>
 </div>
@@ -105,7 +101,7 @@
         });
         $("#search").click(function () {
             var month = $("#salary_month").val()
-            window.location.href = '{{urlfor "FinanceController.Get"}}?month='+month
+            window.location.href = '{{urlfor "FinanceDataController.Get"}}?month='+month
         })
     })
 </script>

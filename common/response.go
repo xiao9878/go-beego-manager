@@ -33,9 +33,9 @@ func ResClientErr(info string) map[string]interface{} {
 	res := make(map[string]interface{})
 	res["code"] = http.StatusBadRequest
 	if info != "" {
-		res["msg"] = "client error"
-	} else {
 		res["msg"] = info
+	} else {
+		res["msg"] = "client error"
 	}
 	return res
 }
