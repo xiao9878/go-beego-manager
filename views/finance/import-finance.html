@@ -15,6 +15,9 @@
     <script type="text/javascript" src="/static/js/ztree/jquery.min.js"></script>
     <script type="text/javascript" src="/static/lib/layui/layui.js" charset="utf-8"></script>
     <script type="text/javascript" src="/static/js/xadmin.js"></script>
+    <link rel="stylesheet" href="/static/css/sweetalert.css">
+    <script src="/static/js/ions_alert.js"></script>
+    <script src="/static/js/sweetalert.min.js"></script>
 </head>
 
 <body>
@@ -51,14 +54,13 @@
             contentType: false, // 不要设置Content-Type请求头
             success: function (data) {
                 if (data.code == 200) {
-                    if (data.data.length > 0) {
-                        layer.alert("重复的数据有" + data.data.toString())
-                    } else {
-                        layer.alert(data.msg)
-                    }
-                    setTimeout(function () {
-                        parent.location.reload()
-                    }, 2000)
+                    // if (data.data.length > 0) {
+                    //     layer.alert("重复的数据有" + data.data.toString())
+                    // } else {
+                    //     layer.alert(data.msg)
+                    // }
+                    ions_alert.alertSuccessToast(data.msg)
+                    setTimeout(x_admin_close, 1000)
                 } else {
                     layer.alert(data.msg)
                 }

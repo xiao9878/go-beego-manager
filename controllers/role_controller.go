@@ -68,9 +68,9 @@ func (this *RoleController) DoAdd() {
 	_, err := orm.NewOrm().Insert(&role)
 	res := make(map[string]interface{})
 	if err != nil {
-		res = common.ResOk("添加成功")
-	} else {
 		res = common.ResServerErr("出现未知错误！，请联系管理员")
+	} else {
+		res = common.ResOk("添加成功")
 	}
 	this.Data["json"] = res
 	this.ServeJSON()

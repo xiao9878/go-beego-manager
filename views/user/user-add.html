@@ -97,7 +97,7 @@
         <div class="layui-form-item">
             <label for="L_repass" class="layui-form-label">
             </label>
-            <button class="layui-btn" lay-filter="add" lay-submit>
+            <button type="button" class="layui-btn" lay-filter="add" lay-submit>
                 提交
             </button>
         </div>
@@ -106,7 +106,7 @@
 <script>
     $(function () {
         // ev.preventDefault();
-        layui.use('form',function () {
+        layui.use('form', function () {
             //监听提交
             var form = layui.form;
             form.on('submit(add)', function (data) {
@@ -134,17 +134,17 @@
                         "is_active": is_active,
                     },
                     success: function (data) {
-                        layer.close(layer.index)
-                        debugger
-                        alert("testr")
                         if (data.code == 200) {
                             // ions_alert.alertSuccessToast(data["msg"])
                             {{/*setTimeout(window.location.href = "{{urlfor "UserController.List"}}", 2000)*/}}
-                            ions_alert.alertErrorToast(data.msg)
+                            ions_alert.alertSuccessToast(data.msg)
                         } else {
                             ions_alert.alertErrorToast(data.msg)
                         }
-                        console.log("回调结束了")
+                        setTimeout(function () {
+                            parent.location.reload()
+                            x_admin_close()
+                        }, 1000)
                     },
                     error: function (data) {
                         alert(data.msg)

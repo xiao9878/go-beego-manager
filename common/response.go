@@ -21,7 +21,7 @@ func ResOk(msg string, data ...interface{}) map[string]interface{} {
 func ResServerErr(info string) map[string]interface{} {
 	res := make(map[string]interface{})
 	res["code"] = http.StatusInternalServerError
-	if info != "" {
+	if info == "" {
 		res["msg"] = "server error"
 	} else {
 		res["msg"] = info

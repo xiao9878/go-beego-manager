@@ -9,13 +9,16 @@
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="/static/css/font.css">
     <link rel="stylesheet" href="/static/css/xadmin.css">
-
     <link rel="stylesheet" href="/static/css/bootstrapStyle/bootstrapStyle.css" type="text/css">
     <script type="text/javascript" src="/static/js/ztree/jquery.min.js"></script>
     <script type="text/javascript" src="/static/js/ztree/jquery.ztree.core.js"></script>
     <script type="text/javascript" src="/static/js/ztree/jquery.ztree.excheck.js"></script>
     <script type="text/javascript" src="/static/js/ztree/jquery.ztree.exedit.js"></script>
-
+    <script type="text/javascript" src="/static/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/static/js/xadmin.js"></script>
+    <link rel="stylesheet" href="/static/css/sweetalert.css">
+    <script type="text/javascript" src="/static/js/sweetalert.min.js"></script>
+    <script type="text/javascript" src="/static/js/ions_alert.js"></script>
 
 </head>
 
@@ -48,10 +51,10 @@
             <div class="layui-form-item layui-layout-admin">
                 <div class="layui-input-block">
                     <div class="layui-footer">
-                        <button class="layui-btn" id="role_auth_add_btn">
+                        <button type="button" class="layui-btn" id="role_auth_add_btn">
                             立即提交
                         </button>
-                        <a href="#" class="layui-btn layui-btn-primary">返回</a>
+                        <button type="button" onclick="x_admin_close()" class="layui-btn layui-btn-primary">返回</button>
                     </div>
                 </div>
             </div>
@@ -83,13 +86,17 @@
             url: "{{urlfor "RoleController.GetAuthJson"}}",
             type: "GET",
             data: {
-                role_id: $("#role_id").val()
+                role_id: $("#role_id").val(),
             },
             success: function (data) {
                 zNode = data.auth_arr_map
-                var auth_ids_has = data.auth_ids_has
-                creatTree(zNode, auth_ids_has)
-
+                var ids = data.auth_ids_has
+                $.fn.zTree.init($("#treeDemo"), setting, zNode);
+                var zTree = $.fn.zTree.getZTreeObj("treeDemo")
+                zTree.expandAll(true)
+                for (let i = 0; i < ids.length; i++) {
+                    zTree.checkNode(zTree.getNodeByParam("id", ids[i]), true)
+                }
             },
             error: function () {
 
@@ -102,22 +109,33 @@
         var zTree = $.fn.zTree.getZTreeObj("treeDemo")
         zTree.expandAll(true)
         for (let i = 0; i < ids.length; i++) {
-            zTree.checkNode(zTree.getNodeByParam("id", ids[i]),true)
-            debugger
+            zTree.checkNode(zTree.getNodeByParam("id", ids[i]), true)
         }
     }
-    $("#role_auth_add_btn").click(function () {
-        $.ajax({
-            url: '{{urlfor "RoleController.DoRoleAtuh"}}'
-            type: "POST"
-            data: {
-                role_id : $("#role_id").val()
 
+    $("#role_auth_add_btn").click(function () {
+        var auth_id = []
+        var selectNodes = $.fn.zTree.getZTreeObj("treeDemo").getCheckedNodes()
+        for (let i = 0; i < selectNodes.length; i++) {
+            auth_id.push(selectNodes[i].id)
+        }
+        debugger
+        $.ajax({
+            url: '{{urlfor "RoleController.DoRoleAtuh"}}',
+            type: "POST",
+            data: {
+                role_id: $("#role_id").val(),
+                auth_id: auth_id
             },
             success: function (data) {
-                if (data.code==200) {
-                    layer.alert(data.msg)
+                if (data.code == 200) {
+                    ions_alert.alertSuccessToast(data.msg)
+                } else {
+                    ions_alert.alertErrorToast(data.msg)
                 }
+                setTimeout(function () {
+                    parent.location.reload()
+                }, 1000)
             },
             error: function (data) {
 

@@ -60,7 +60,11 @@ func init() {
 	//内容管理
 	news := beego.NewNamespace("main/",
 		beego.NSRouter("cate", &controllers.CateController{}),
-		beego.NSRouter("news", &controllers.CateController{}),
+		beego.NSRouter("cate/is_active", &controllers.CateController{}, "post:IsActive"),
+		beego.NSRouter("news", &controllers.NewsController{}),
+		beego.NSRouter("cate/add", &controllers.CateController{}, "get:ToAdd"),
+		beego.NSRouter("cate/add", &controllers.CateController{}, "Post:DoAdd"),
+		beego.NSRouter("cate/del", &controllers.CateController{}, "Post:DoDelete"),
 	)
 	beego.AddNamespace(main, salary, finance, auth, role, news)
 }
