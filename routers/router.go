@@ -11,6 +11,7 @@ func init() {
 	beego.Router("/test", &controllers.HomeController{}, "post:Test")
 	beego.Router("/change_captcha", &controllers.LoginController{}, "get:ChangCaptcha")
 	beego.Router("/main/index", &controllers.HomeController{})
+	beego.Router("/main/welecome", &controllers.HomeController{}, "get:Welcome")
 	//用户模块
 	main := beego.NewNamespace("main/user",
 		beego.NSRouter("list", &controllers.UserController{}, "get:List"),

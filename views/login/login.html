@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>知了内部办公网-后台系统管理</title>
+	<title>后台系统管理</title>
 	<meta name="renderer" content="webkit|ie-comp|ie-stand">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta http-equiv="Cache-Control" content="no-siteapp" />
@@ -12,10 +12,10 @@
     <link rel="icon" href="/static/images/zlkt.ico" type="image/x-icon"/>
     <script src="/static/common/common.js"></script>
 </head>
-<body class="login-bg">
+<body class="login-bg" style="background-image: url('/static/images/bgi.jpg')">
     
     <div class="login">
-        <div class="message">知了课堂内部办公网-登录管理</div>
+        <div class="message">登录管理</div>
         <div id="darkbannerwrap"></div>
         
         <form method="post" class="layui-form" id="login">
@@ -25,7 +25,7 @@
             <hr class="hr15">
             <div>
                 <input autocomplete="off" id="captcha" placeholder="验证码" type="text" class="layui-input" style="width: 180px;float: left">
-                <img id="captcha_img" src="../static/images/code.jpg" style="cursor: pointer;width: 140px;height: 50px;float: right"/>
+                <img id="captcha_img" src="/static/images/code.jpg" style="cursor: pointer;width: 140px;height: 50px;float: right"/>
                 <input type="hidden" value="{{.captcha.Id}}" id="captcha_id">
             </div>
             <hr class="hr15">
