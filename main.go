@@ -22,6 +22,11 @@ func init() {
 
 	logs.Info(fmt.Sprintf("连接数据库成功！连接信息：host:%s|port:%s|db:%s", host, port, db))
 }
+
+//go:generate sh -c "echo 'package routers; import \"github.com/astaxie/beego\"; func init() {beego.BConfig.RunMode = beego.DEV}' > routers/0.go"
+//go:generate sh -c "echo 'package routers; import \"os\"; func init() {os.Exit(0)}' > routers/z.go"
+//go:generate go run $GOFILE
+//go:generate sh -c "rm routers/0.go routers/z.go"
 func main() {
 	orm.RunCommand()
 
@@ -29,6 +34,7 @@ func main() {
 	beego.InsertFilter("/main/*", beego.BeforeRouter, utils.LoginFilter)
 	//日志
 	//logs.SetLogger(logs.AdapterMultiFile, `{"filename":"logs/log.log","separate":"["err","info"]"}`)
-
+	beego.SetStaticPath("/upload", "upload")
+	beego.SetStaticPath("main/news/upload", "upload")
 	beego.Run()
 }

@@ -28,7 +28,7 @@ func NewsList(pageSize, page int, keyword string) (*[]News, int, int, error) {
 		news []News
 		err  error
 	)
-	qs := orm.NewOrm().QueryTable(new(News)).Filter("is_delete", 0)
+	qs := orm.NewOrm().QueryTable(new(News)).Filter("is_delete", 0).OrderBy("-create_time")
 	if keyword != "" {
 		qs = qs.Filter("name__icontains", keyword)
 	}
@@ -58,7 +58,7 @@ func NewsSave(news *News) error {
 
 //更新
 func NewsUpdate(news *News) error {
-	_, err := orm.NewOrm().Update(&news)
+	_, err := orm.NewOrm().Update(news, "title", "content", "category_id")
 	return err
 }
 

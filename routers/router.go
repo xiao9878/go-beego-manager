@@ -66,6 +66,12 @@ func init() {
 		beego.NSRouter("cate/add", &controllers.CateController{}, "get:ToAdd"),
 		beego.NSRouter("cate/add", &controllers.CateController{}, "Post:DoAdd"),
 		beego.NSRouter("cate/del", &controllers.CateController{}, "Post:DoDelete"),
+		beego.NSRouter("news/add", &controllers.NewsController{}, "get:ToAdd"),
+		beego.NSRouter("news/add", &controllers.NewsController{}, "Post:DoAdd"),
+		beego.NSRouter("news/del", &controllers.NewsController{}, "Post:DoDelete"),
+		beego.NSRouter("/upload", &controllers.NewsController{}, "Post:Upload"),
+		//beego.NSRouter("/sys_info", &controllers.SysInfo{}, "Get:GetInfo"),
 	)
+	beego.Include(&controllers.SysInfo{})
 	beego.AddNamespace(main, salary, finance, auth, role, news)
 }
