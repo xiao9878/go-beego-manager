@@ -28,7 +28,7 @@ type Info struct {
 	Disk    map[string]string      `json:"disk"`
 }
 
-// @router /sys/info [get]
+// @router /sys/info [*]
 func (this *SysInfo) GetInfo() {
 	s := time.Now().Nanosecond()
 	cpu, _ := cpu.Info()

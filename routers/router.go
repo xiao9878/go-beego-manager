@@ -69,9 +69,35 @@ func init() {
 		beego.NSRouter("news/add", &controllers.NewsController{}, "get:ToAdd"),
 		beego.NSRouter("news/add", &controllers.NewsController{}, "Post:DoAdd"),
 		beego.NSRouter("news/del", &controllers.NewsController{}, "Post:DoDelete"),
-		beego.NSRouter("/upload", &controllers.NewsController{}, "Post:Upload"),
-		//beego.NSRouter("/sys_info", &controllers.SysInfo{}, "Get:GetInfo"),
+		beego.NSRouter("upload", &controllers.NewsController{}, "Post:Upload"),
+		beego.NSRouter("sys_info", &controllers.SysInfo{}, "Get:GetInfo"),
 	)
-	beego.Include(&controllers.SysInfo{})
-	beego.AddNamespace(main, salary, finance, auth, role, news)
+	//车辆管理,从此刻开始，路由采用这种写法
+	car := beego.NewNamespace("main",
+		beego.NSNamespace("car_brand",
+			beego.NSRouter("list", &controllers.CarBrandController{}, "get:Get"),
+			beego.NSRouter("add", &controllers.CarBrandController{}, "get:ToAdd"),
+			beego.NSRouter("add", &controllers.CarBrandController{}, "post:DoAdd"),
+			beego.NSRouter("isActive", &controllers.CarBrandController{}, "post:IsActive"),
+			beego.NSRouter("delete", &controllers.CarBrandController{}, "post:Delete"),
+		),
+		beego.NSNamespace("car",
+			beego.NSRouter("list", &controllers.CarController{}, "get:Get"),
+			beego.NSRouter("add", &controllers.CarController{}, "get:ToAdd"),
+			beego.NSRouter("add", &controllers.CarController{}, "post:DoAdd"),
+			beego.NSRouter("isActive", &controllers.CarController{}, "post:IsActive"),
+			beego.NSRouter("delete", &controllers.CarController{}, "post:Delete"),
+		),
+		beego.NSNamespace("car_apply",
+			beego.NSRouter("list", &controllers.CarApplyController{}, "get:Get"),
+			beego.NSRouter("add", &controllers.CarApplyController{}, "get:ToAdd"),
+			beego.NSRouter("add", &controllers.CarApplyController{}, "post:DoAdd"),
+			beego.NSRouter("isActive", &controllers.CarApplyController{}, "post:IsActive"),
+			beego.NSRouter("delete", &controllers.CarApplyController{}, "post:Delete"),
+			beego.NSRouter("history", &controllers.CarApplyController{}, "get:MyApply"),
+		),
+	)
+
+	//beego.Include(&controllers.SysInfo{})
+	beego.AddNamespace(main, salary, finance, auth, role, news, car)
 }

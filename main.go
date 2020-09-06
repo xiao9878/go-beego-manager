@@ -9,6 +9,7 @@ import (
 	_ "manager/models"
 	_ "manager/routers"
 	"manager/utils"
+	"os"
 )
 
 func init() {
@@ -18,8 +19,11 @@ func init() {
 	port := beego.AppConfig.String("port")
 	db := beego.AppConfig.String("db")
 	orm.RegisterDriver("mysql", orm.DRMySQL)
-	orm.RegisterDataBase("default", "mysql", username+":"+pwd+"@tcp("+host+":"+port+")/"+db+"?charset=utf8&loc=Local")
-
+	err := orm.RegisterDataBase("default", "mysql", username+":"+pwd+"@tcp("+host+":"+port+")/"+db+"?charset=utf8&loc=Local")
+	if err != nil {
+		fmt.Println("连接数据库失败！", err)
+		os.Exit(2)
+	}
 	logs.Info(fmt.Sprintf("连接数据库成功！连接信息：host:%s|port:%s|db:%s", host, port, db))
 }
 

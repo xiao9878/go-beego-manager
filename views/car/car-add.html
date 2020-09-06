@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>欢迎页面-X-admin2.0</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon"/>
+    <link rel="stylesheet" href="/static/css/font.css">
+    <link rel="stylesheet" href="/static/css/sweetalert.css">
+    <script src="/static/js/ions_alert.js"></script>
+    <script src="/static/js/sweetalert.min.js"></script>
+    <link rel="stylesheet" href="/static/css/xadmin.css">
+    <script type="text/javascript" src="/static/js/ztree/jquery.min.js"></script>
+    <script type="text/javascript" src="/static/lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="/static/js/xadmin.js"></script>
+    <link rel="stylesheet" href="/static/css/sweetalert.css">
+    <script src="/static/js/ions_alert.js"></script>
+    <script src="/static/js/sweetalert.min.js"></script>
+</head>
+
+<body>
+<div class="x-body">
+    <form class="layui-form" id="form">
+        <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+                <span class="x-red">*</span>车辆名称
+            </label>
+            <div class="layui-input-inline">
+                <input type="hidden" name="id" value="{{.car.Id}}">
+                <input type="text" name="name" value="{{.car.Name}}" lay-verify="required"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_email" class="layui-form-label">
+                <span class="x-red">*</span>品牌
+            </label>
+            <div class="layui-input-inline">
+                {{if .car.Id}}
+                    <select name="brand" id="brand" lay-verify="brand">
+                        {{range .brand}}
+                            {{if eq .Id $.car.CarBrand.Id}}
+                                <option value="{{.Id}}" selected>{{.Name }}</option>
+                            {{else}}
+                                <option value="{{.Id}}">{{.Name }}</option>
+                            {{end}}
+                        {{end}}
+                    </select>
+                {{else}}
+                    <select name="brand" id="brand" required>
+                        <option value="0"></option>
+                        {{range .brand}}
+                            <option value="{{.Id}}">{{.Name }}</option>
+                        {{end}}
+                    </select>
+                {{end}}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label">
+                <span class="x-red">*</span>是否启用
+            </label>
+            <div class="layui-input-inline">
+                {{if .car.IsActive}}
+                    {{if eq .car.IsActive 0}}
+                        <input type="radio" name="is_active" required="" lay-verify="repass" checked
+                               autocomplete="off" class="layui-input" value="0" title="启用">
+                        <input type="radio" name="is_active" required="" lay-verify="repass"
+                               autocomplete="off" class="layui-input" value="1" title="停用">
+                    {{else}}
+                        <input type="radio" name="is_active" required="" lay-verify="repass"
+                               autocomplete="off" class="layui-input" value="0" title="启用">
+                        <input type="radio" name="is_active" required="" lay-verify="repass" checked
+                               autocomplete="off" class="layui-input" value="1" title="停用">
+                    {{end}}
+
+                {{else}}
+                    <input type="radio" name="is_active" required="" lay-verify="repass" checked
+                           autocomplete="off" class="layui-input" value="0" title="启用">
+
+                    <input type="radio" name="is_active" required="" lay-verify="repass"
+                           autocomplete="off" class="layui-input" value="1" title="停用">
+                {{end}}
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="L_repass" class="layui-form-label">
+            </label>
+            <button type="button" class="layui-btn" lay-filter="add" lay-submit>
+                提交
+            </button>
+        </div>
+    </form>
+</div>
+<script>
+    $(function () {
+        // ev.preventDefault();
+        layui.use('form', function () {
+            //监听提交
+            var form = layui.form;
+            form.on('submit(add)', function (data) {
+                $.ajax({
+                    url: "{{urlfor "carController.DoAdd"}}",
+                    type: "POST",
+                    data: $("form").serialize(),
+                    success: function (data) {
+                        if (data.code == 200) {
+                            // ions_alert.alertSuccessToast(data["msg"])
+                            {{/*setTimeout(window.location.href = "{{urlfor "UserController.List"}}", 2000)*/}}
+                            ions_alert.alertSuccessToast(data.msg)
+                        } else {
+                            ions_alert.alertErrorToast(data.msg)
+                            return
+                        }
+                        setTimeout(function () {
+                            parent.location.reload()
+                            x_admin_close()
+                        }, 1000)
+                    },
+                    error: function (data) {
+                        alert(data.msg)
+                    },
+                })
+                //关闭当前frame
+                // parent.layer.close(index);
+            })
+        })
+    })
+
+</script>
+</body>
+
+</html>

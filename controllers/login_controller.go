@@ -52,7 +52,7 @@ func (this *LoginController) Post() {
 
 	user_info := models.User{}
 	res := map[string]interface{}{}
-	if !is_ok {
+	if !is_ok || captcha == "" {
 		res["code"] = http.StatusBadRequest
 		res["msg"] = "验证码错误！"
 		this.Data["json"] = res
