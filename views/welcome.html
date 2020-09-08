@@ -142,7 +142,18 @@
                 $("#cpu-mhz").text(info.cpu.mhz)
                 $("#core").text(info.cpu.cores)
                 $("#memory").text(info.memory.used+'/'+info.memory.total+'('+info.memory.percent+')')
-                $("#disk").text(info.disk.used+'/'+info.disk.total+'('+info.disk.percent+')')
+                var disk = ""
+                for (var i =0 ;i<info.disk.length;i++) {
+                    d = info.disk[i]
+                    if (i<info.disk.length-1) {
+                        disk += d.name+d.used+"/"+d.total+"("+d.percent+");\n"
+                    } else {
+                        disk += d.name+d.used+"/"+d.total+"("+d.percent+")"
+                    }
+                }
+                $("#disk").text(disk)
+
+
             }
         })
     }
