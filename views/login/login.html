@@ -87,7 +87,6 @@
                 var password = $("#password").val();
                 var captcha = $("#captcha").val();
                 var captcha_id = $("#captcha_id").val();
-                var os = detectOS()
                 $.ajax({
                     url: "/",
                     type: "POST",
@@ -96,7 +95,8 @@
                         "password": password,
                         "captcha": captcha,
                         "captcha_id": captcha_id,
-                        "os": os
+                        "os": getOS(),
+                        "browse":Browse()
                     },
                     success: function (data) {
                         console.log(data)
