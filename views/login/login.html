@@ -35,7 +35,7 @@
         <hr class="hr20">
     </form>
 </div>
-
+<script src="/static/js/os.js"></script>
 <script>
     $(document).keyup(function (event) {
         if (event.keyCode == 13) {
@@ -87,6 +87,7 @@
                 var password = $("#password").val();
                 var captcha = $("#captcha").val();
                 var captcha_id = $("#captcha_id").val();
+                var os = detectOS()
                 $.ajax({
                     url: "/",
                     type: "POST",
@@ -94,7 +95,8 @@
                         "username": username,
                         "password": password,
                         "captcha": captcha,
-                        "captcha_id": captcha_id
+                        "captcha_id": captcha_id,
+                        "os": os
                     },
                     success: function (data) {
                         console.log(data)

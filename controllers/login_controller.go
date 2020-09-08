@@ -8,6 +8,7 @@ import (
 	"manager/models"
 	"manager/utils"
 	"net/http"
+	"time"
 )
 
 const (
@@ -70,6 +71,7 @@ func (this *LoginController) Post() {
 			res["msg"] = "用户被禁用！"
 		} else {
 			this.SetSession("id", user_info.Id)
+			orm.NewOrm().Raw("INSERT INTO `sys_login_log` (user_name,ip,os,time) VALUES(?,?,?,?)", user_info.UserName, this.Ctx.Request.RemoteAddr, this.GetString("os"), time.Now()).Exec()
 			res["code"] = http.StatusOK
 			res["msg"] = "登陆成功！"
 			logs.Info(fmt.Sprintf("登陆成功，登录信息%x", username))
