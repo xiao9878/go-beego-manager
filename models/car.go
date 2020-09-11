@@ -40,9 +40,10 @@ func CarList(pageSize, page int, keyword string, args ...string) (*[]Car, int, i
 		for _, arg := range args {
 			switch arg {
 			case "status":
-				qs.Filter("status", 0)
+				qs = qs.Filter("status", 0)
 			}
 		}
+		qs = qs.Filter("is_active", 0)
 	}
 	_, err = qs.Limit(pageSize).Offset((page - 1) * pageSize).All(&list)
 	count, _ := qs.Count()
