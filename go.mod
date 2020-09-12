@@ -6,6 +6,7 @@ require github.com/astaxie/beego v1.12.2
 
 require (
 	github.com/StackExchange/wmi v0.0.0-20190523213315-cbe66965904d // indirect
+	github.com/beego/bee v1.12.0 // indirect
 	github.com/go-ole/go-ole v1.2.4 // indirect
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/google/uuid v1.1.1

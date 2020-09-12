@@ -34,19 +34,7 @@ func (this *SysInfo) GetInfo() {
 	cpu, _ := cpu.Info()
 	memory, _ := mem.VirtualMemory()
 	disks, _ := disk.Partitions(true)
-	fmt.Println(disks)
 	//disk, _ := disk.Usage("D:")
-	var diskList []map[string]string
-	for _, p := range disks {
-		usage, _ := disk.Usage(p.Mountpoint)
-		dinfo := map[string]string{
-			"name":    p.Mountpoint,
-			"total":   fmt.Sprintf("%.2f", float64(usage.Total)/1024/1024/1024) + "G",
-			"used":    fmt.Sprintf("%.2f", float64(usage.Used)/1024/1024/1024) + "G",
-			"percent": strconv.Itoa(int(usage.UsedPercent)) + "%",
-		}
-		diskList = append(diskList, dinfo)
-	}
 	cpuInfo := map[string]interface{}{
 		"name":  cpu[0].ModelName,
 		"mhz":   cpu[0].Mhz,
@@ -68,6 +56,7 @@ func (this *SysInfo) GetInfo() {
 	core := runtime.GOMAXPROCS(0)
 	//go版本
 	version := runtime.Version()
+
 	info := Info{
 		Name:    hostName,
 		Os:      sysOs,
@@ -76,7 +65,46 @@ func (this *SysInfo) GetInfo() {
 		Version: version,
 		Cpu:     &cpuInfo,
 		Memory:  &memoryInfo,
-		Disk:    &diskList,
+	}
+	if sysOs == "linux" {
+		var diskList []map[string]string
+		for _, p := range disks {
+			if p.Mountpoint == `/` {
+				usage, _ := disk.Usage(p.Mountpoint)
+				dinfo := map[string]string{
+					"name":    p.Mountpoint,
+					"total":   fmt.Sprintf("%.2f", float64(usage.Total)/1024/1024/1024) + "G",
+					"used":    fmt.Sprintf("%.2f", float64(usage.Used)/1024/1024/1024) + "G",
+					"percent": strconv.Itoa(int(usage.UsedPercent)) + "%",
+				}
+				diskList = append(diskList, dinfo)
+			}
+		}
+		//root, err := disk.Usage("/")
+		//fmt.Println("linux", root)
+		//if err != nil {
+		//	fmt.Println(err, time.Now().Format("2006-01-02 15:04:06"))
+		//}
+		//dinfo := map[string]string{
+		//	"name":    root.Path,
+		//	"total":   fmt.Sprintf("%.2f", float64(root.Total)/1024/1024/1024) + "G",
+		//	"used":    fmt.Sprintf("%.2f", float64(root.Used)/1024/1024/1024) + "G",
+		//	"percent": strconv.Itoa(int(root.UsedPercent)) + "%",
+		//}
+		//diskList = append(diskList, dinfo)
+	} else if sysOs == "windows" {
+		var diskList []map[string]string
+		for _, p := range disks {
+			usage, _ := disk.Usage(p.Mountpoint)
+			dinfo := map[string]string{
+				"name":    p.Mountpoint,
+				"total":   fmt.Sprintf("%.2f", float64(usage.Total)/1024/1024/1024) + "G",
+				"used":    fmt.Sprintf("%.2f", float64(usage.Used)/1024/1024/1024) + "G",
+				"percent": strconv.Itoa(int(usage.UsedPercent)) + "%",
+			}
+			diskList = append(diskList, dinfo)
+		}
+		info.Disk = &diskList
 	}
 	e := time.Now().Nanosecond()
 	fmt.Println("--------------", e-s, "--------------")

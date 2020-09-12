@@ -11,11 +11,26 @@
  Target Server Version : 50721
  File Encoding         : 65001
 
- Date: 06/09/2020 18:27:15
+ Date: 08/09/2020 17:41:10
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
+-- ----------------------------
+-- Table structure for session
+-- ----------------------------
+DROP TABLE IF EXISTS `session`;
+CREATE TABLE `session`  (
+  `session_key` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `session_data` blob NULL,
+  `session_expiry` int(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`session_key`) USING BTREE
+) ENGINE = MyISAM CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of session
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for sys_auth
@@ -206,6 +221,29 @@ INSERT INTO `sys_finance` VALUES (304, '2020-06', 63124.31, 432, 321, 212, 243, 
 INSERT INTO `sys_finance` VALUES (305, '2020-07', 31224.32, 643, 322, 212, 243, 59, '2020-08-31 15:37:05');
 INSERT INTO `sys_finance` VALUES (306, '2020-08', 32212.46, 313, 765, 212, 243, 59, '2020-08-31 15:37:05');
 INSERT INTO `sys_finance` VALUES (307, '2020-09', 32145.24, 312, 312, 212, 243, 59, '2020-08-31 15:37:05');
+
+-- ----------------------------
+-- Table structure for sys_login_log
+-- ----------------------------
+DROP TABLE IF EXISTS `sys_login_log`;
+CREATE TABLE `sys_login_log`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `ip` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `os` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `browse` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
+  `time` datetime(0) NULL DEFAULT NULL,
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of sys_login_log
+-- ----------------------------
+INSERT INTO `sys_login_log` VALUES (1, 'root', '127.0.0.1:54799', '127.0.0.1:8080', NULL, '2020-09-08 12:47:41');
+INSERT INTO `sys_login_log` VALUES (2, 'root', '127.0.0.1:54799', '127.0.0.1:8080', NULL, '2020-09-08 12:55:52');
+INSERT INTO `sys_login_log` VALUES (3, 'root', '127.0.0.1:55507', 'other', NULL, '2020-09-08 12:58:11');
+INSERT INTO `sys_login_log` VALUES (4, 'root', '127.0.0.1:55507', 'other', NULL, '2020-09-08 13:00:11');
+INSERT INTO `sys_login_log` VALUES (5, 'root', '127.0.0.1:58145', 'Win10', 'chrome 85.0.4183.83', '2020-09-08 17:39:13');
 
 -- ----------------------------
 -- Table structure for sys_news
