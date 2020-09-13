@@ -11,8 +11,6 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/google/uuid v1.1.1
 	github.com/mojocn/base64Captcha v1.3.1
-	github.com/prometheus/common v0.13.0 // indirect
-	github.com/shiena/ansicolor v0.0.0-20200830101100-9405ca8e49f3 // indirect
 	github.com/shirou/gopsutil v2.20.8+incompatible
 	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/tealeg/xlsx v1.0.5
