@@ -4,7 +4,12 @@ on:
   push:
     tags:
       - 'v*'
-
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker image tag'
+        required: false
+  
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
