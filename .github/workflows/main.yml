@@ -31,5 +31,5 @@ jobs:
     - name: 构建并推送 Docker 镜像
       run: |
         docker buildx create --use
-        docker buildx build -t your-dockerhub-username/your-repo-name:${{ steps.extract_tag.outputs.TAG }} .
-        docker push your-dockerhub-username/your-repo-name:${{ steps.extract_tag.outputs.TAG }}
+        docker buildx build -t xiao9878/go-beego-admin:${{ steps.extract_tag.outputs.TAG }} .
+        docker push xiao9878/go-beego-admin:${{ steps.extract_tag.outputs.TAG }}
