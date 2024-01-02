@@ -1,39 +1,35 @@
-name: zgpt-web build & push
+name: 构建并推送 Docker 镜像
 
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Docker image tag'
+        description: 'Docker 镜像标签'
         required: false
-  
+
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
+    - name: 检出仓库
       uses: actions/checkout@v2
 
-    - name: Login to Docker Hub
+    - name: 设置 Docker Buildx
+      uses: docker/setup-buildx-action@v1
+
+    - name: 登录到 Docker Hub
       run: echo ${{ secrets.DOCKERHUB_TOKEN }} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-    - name: Set up Git
-      run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-
-    - name: Extract Tag
+    - name: 提取标签
       id: extract_tag
       run: echo "::set-output name=TAG::${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/') ? github.ref : github.event.inputs.tag }}"
 
-    - name: Build Docker Image
+    - name: 构建并推送 Docker 镜像
       run: |
-        docker build -t xiao9878/go-beego-manager:${{ steps.extract_tag.outputs.TAG }} .
-        docker tag xiao9878/go-beego-manager:${{ steps.extract_tag.outputs.TAG }} your-dockerhub-username/your-repo-name:latest
-
-    - name: Push Docker Image
-      run: |
+        docker buildx create --use
+        docker buildx build -t your-dockerhub-username/your-repo-name:${{ steps.extract_tag.outputs.TAG }} .
         docker push your-dockerhub-username/your-repo-name:${{ steps.extract_tag.outputs.TAG }}
-        docker push your-dockerhub-username/your-repo-name:latest
