@@ -20,18 +20,18 @@ jobs:
       run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
 
     - name: Display Tag
-      run: echo "Tag pushed: ${{ github.ref }}"
+      run: echo "Tag pushed is ${{ github.ref }}"
 
     - name: Extract Tag Name
-      run: echo "Tag name: $(basename ${{ github.ref }})"
+      run: echo "Tag name is $(basename ${{ github.ref }})"
       id: extract_tag
 
     - name: Build Docker Image
       run: |
-        docker build -t xiao9878/go-beego-admin:$(echo ${{ steps.extract_tag.outputs.TAG }})  .
-        docker tag xiao9878/go-beego-admin:$(echo ${{ steps.extract_tag.outputs.TAG }}) xiao9878/go-beego-admin:latest
+        docker build -t xiao9878/go-beego-admin:$(basename ${{ github.ref }})  .
+        docker tag xiao9878/go-beego-admin:$(basename ${{ github.ref }}) xiao9878/go-beego-admin:latest
 
     - name: Push Docker Image
       run: |
-        docker push xiao9878/go-beego-admin:$(echo ${{ steps.extract_tag.outputs.TAG }}) 
+        docker push xiao9878/go-beego-admin:$(basename ${{ github.ref }}) 
         docker push xiao9878/go-beego-admin:latest
