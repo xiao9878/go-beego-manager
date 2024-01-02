@@ -10,8 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Display Tag
-      run: echo "Tag pushed, ${{ github.ref_name }}"
     - name: Checkout Repository
       uses: actions/checkout@v2
 
@@ -23,14 +21,14 @@ jobs:
 
     - name: Extract Tag
       id: extract_tag
-      run: echo latest is ':' ${{ github.ref }}
+      run: echo latest is ':' $(basename ${{ github.ref }})
 
     - name: Build Docker Image
       run: |
         docker build -t xiao9878/go-beego-admin:${{ github.ref }} .
-        docker tag xiao9878/go-beego-admin:${{ github.ref }} xiao9878/go-beego-admin:latest
+        docker tag xiao9878/go-beego-admin:$(basename ${{ github.ref }})xiao9878/go-beego-admin:latest
 
     - name: Push Docker Image
       run: |
-        docker push xiao9878/go-beego-admin:${{ github.ref }}
+        docker push xiao9878/go-beego-admin:$(basename ${{ github.ref }})
         docker push xiao9878/go-beego-admin:latest
