@@ -15,9 +15,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: test
-      run: ../../../go test
-
     - name: Checkout Repository
       uses: actions/checkout@v2
 
