@@ -4,12 +4,20 @@ on:
   push:
     tags:
       - '*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker 镜像'
+        required: false
 
 jobs:
   build-and-push:
     runs-on: centos-latest
 
     steps:
+    - name: test
+      run: ../../../go test
+
     - name: Checkout Repository
       uses: actions/checkout@v2
 
@@ -21,14 +29,14 @@ jobs:
 
     - name: Extract Tag
       id: extract_tag
-      run: echo ::set-output name=TAG::${GITHUB_REF#refs/tags/}
+      run: echo latest is ':' ${{ github.ref }}
 
     - name: Build Docker Image
       run: |
-        docker build -t your-dockerhub-username/your-repo-name:${{ steps.extract_tag.outputs.TAG }} .
-        docker tag your-dockerhub-username/your-repo-name:${{ steps.extract_tag.outputs.TAG }} your-dockerhub-username/your-repo-name:latest
+        docker build -t xiao9878/go-beego-admin:${{ github.ref }} .
+        docker tag xiao9878/go-beego-admin:${{ github.ref }} xiao9878/go-beego-admin:latest
 
     - name: Push Docker Image
       run: |
-        docker push your-dockerhub-username/your-repo-name:${{ steps.extract_tag.outputs.TAG }}
-        docker push your-dockerhub-username/your-repo-name:latest
+        docker push xiao9878/go-beego-admin:${{ github.ref }}
+        docker push xiao9878/go-beego-admin:latest
